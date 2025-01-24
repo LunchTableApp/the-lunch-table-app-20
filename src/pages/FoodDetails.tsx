@@ -8,6 +8,7 @@ interface LocationState {
     id: string;
     name: string;
     rating: number;
+    notes: string;
     date: Date;
   };
 }
@@ -47,6 +48,12 @@ const FoodDetails = () => {
               />
             ))}
           </div>
+          {food.notes && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-gray-700 mb-2">Notes</h2>
+              <p className="text-gray-600 whitespace-pre-wrap">{food.notes}</p>
+            </div>
+          )}
           <p className="text-gray-600 mb-6">
             Logged on: {new Date(food.date).toLocaleDateString()}
           </p>
