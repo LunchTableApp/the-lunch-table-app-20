@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FoodEntry } from "@/components/FoodEntry";
 import { FoodForm } from "@/components/FoodForm";
+import { useNavigate } from "react-router-dom";
 
 interface FoodItem {
   id: string;
@@ -11,6 +12,7 @@ interface FoodItem {
 
 const Index = () => {
   const [foods, setFoods] = useState<FoodItem[]>([]);
+  const navigate = useNavigate();
 
   const handleAddFood = (name: string, rating: number) => {
     const newFood: FoodItem = {
@@ -20,6 +22,7 @@ const Index = () => {
       date: new Date(),
     };
     setFoods((prev) => [newFood, ...prev]);
+    navigate("/food-details", { state: { food: newFood } });
   };
 
   const handleDeleteFood = (id: string) => {
