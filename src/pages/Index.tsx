@@ -29,9 +29,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container max-w-2xl">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-          Food Logger
-        </h1>
+        <div className="flex flex-col items-center mb-8">
+          <img 
+            src="/eaten-carrot-logo.svg" 
+            alt="Eaten carrot logo" 
+            className="w-20 h-20 mb-4 animate-fadeIn"
+          />
+          <h1 className="text-4xl font-bold text-gray-800 text-center">
+            Food Logger
+          </h1>
+        </div>
         <FoodForm onSubmit={handleAddFood} />
         <div className="space-y-4">
           {foods.map((food) => (
