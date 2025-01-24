@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, Plus } from "lucide-react";
+import { Carrot, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
@@ -63,22 +63,22 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
           Rating
         </label>
         <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
+          {[1, 2, 3, 4, 5].map((carrot) => (
             <button
-              key={star}
+              key={carrot}
               type="button"
-              onClick={() => setRating(star)}
-              onMouseEnter={() => setHoveredRating(star)}
+              onClick={() => setRating(carrot)}
+              onMouseEnter={() => setHoveredRating(carrot)}
               onMouseLeave={() => setHoveredRating(0)}
               className="focus:outline-none"
             >
-              <Star
+              <Carrot
                 size={24}
                 className={cn(
-                  "transition-colors",
-                  star <= (hoveredRating || rating)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300 hover:text-yellow-200"
+                  "transition-colors rotate-180",
+                  carrot <= (hoveredRating || rating)
+                    ? "fill-orange-400 text-orange-400"
+                    : "text-gray-300 hover:text-orange-200"
                 )}
               />
             </button>

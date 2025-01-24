@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { Carrot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LocationState {
@@ -35,14 +35,14 @@ const FoodDetails = () => {
         <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">{food.name}</h1>
           <div className="flex mb-4">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
+            {[1, 2, 3, 4, 5].map((carrot) => (
+              <Carrot
+                key={carrot}
                 size={24}
                 className={cn(
-                  "transition-colors",
-                  star <= food.rating
-                    ? "fill-yellow-400 text-yellow-400"
+                  "transition-colors rotate-180",
+                  carrot <= food.rating
+                    ? "fill-orange-400 text-orange-400"
                     : "text-gray-300"
                 )}
               />
