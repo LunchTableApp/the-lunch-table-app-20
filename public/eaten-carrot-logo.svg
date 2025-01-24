@@ -1,10 +1,8 @@
 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Carrot body -->
-  <path d="M40 20 L60 20 L70 80 L30 80 Z" fill="#ff6b35"/>
+  <path d="M40 20 L50 90 L60 20 Z" fill="#ff6b35"/>
   <!-- Carrot top leaves -->
   <path d="M40 20 C40 10, 50 5, 60 20" stroke="#4ade80" stroke-width="4" fill="none"/>
   <path d="M45 15 C45 5, 55 0, 65 15" stroke="#4ade80" stroke-width="4" fill="none"/>
-  <!-- Bite marks -->
-  <path d="M30 40 Q40 30 50 40" fill="white"/>
-  <path d="M50 60 Q60 50 70 60" fill="white"/>
+  <path d="M35 15 C35 5, 45 0, 55 15" stroke="#4ade80" stroke-width="4" fill="none"/>
 </svg>
