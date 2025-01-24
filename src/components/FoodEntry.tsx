@@ -6,10 +6,11 @@ interface FoodEntryProps {
   name: string;
   rating: number;
   date: Date;
+  notes: string;
   onDelete: (id: string) => void;
 }
 
-export const FoodEntry = ({ id, name, rating, date, onDelete }: FoodEntryProps) => {
+export const FoodEntry = ({ id, name, rating, date, notes, onDelete }: FoodEntryProps) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-start">
@@ -18,6 +19,11 @@ export const FoodEntry = ({ id, name, rating, date, onDelete }: FoodEntryProps) 
           <p className="text-sm text-gray-500">
             {date.toLocaleDateString()}
           </p>
+          {notes && (
+            <p className="mt-2 text-gray-600 text-sm">
+              {notes}
+            </p>
+          )}
         </div>
         <button
           onClick={() => onDelete(id)}
