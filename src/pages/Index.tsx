@@ -8,6 +8,7 @@ interface FoodItem {
   id: string;
   name: string;
   rating: number;
+  notes: string;
   date: Date;
 }
 
@@ -27,11 +28,12 @@ const Index = () => {
     }
   }, []);
 
-  const handleAddFood = (name: string, rating: number) => {
+  const handleAddFood = (name: string, rating: number, notes: string) => {
     const newFood: FoodItem = {
       id: crypto.randomUUID(),
       name,
       rating,
+      notes,
       date: new Date(),
     };
     const updatedFoods = [newFood, ...foods];

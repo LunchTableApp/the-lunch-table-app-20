@@ -2,14 +2,16 @@ import { useState } from "react";
 import { Star, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";
 
 interface FoodFormProps {
-  onSubmit: (name: string, rating: number) => void;
+  onSubmit: (name: string, rating: number, notes: string) => void;
 }
 
 export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
+  const [notes, setNotes] = useState("");
   const [hoveredRating, setHoveredRating] = useState(0);
   const { toast } = useToast();
 
@@ -31,9 +33,10 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
       });
       return;
     }
-    onSubmit(name, rating);
+    onSubmit(name, rating, notes);
     setName("");
     setRating(0);
+    setNotes("");
     toast({
       title: "Success",
       description: "Food entry added successfully!",
@@ -81,6 +84,18 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
             </button>
           ))}
         </div>
+      </div>
+      <div className="mb-4">
+        <label htmlFor="food-notes" className="block text-sm font-medium text-gray-700 mb-1">
+          Notes
+        </label>
+        <Textarea
+          id="food-notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Add your thoughts about this food..."
+          className="min-h-[100px]"
+        />
       </div>
       <button
         type="submit"
