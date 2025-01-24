@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 interface FoodItem {
   id: string;
   name: string;
-  rating: number;
+  tasteRating: number;
+  satisfactionRating: number;
   notes: string;
   date: Date;
 }
@@ -16,11 +17,12 @@ const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleAddFood = (name: string, rating: number, notes: string) => {
+  const handleAddFood = (name: string, tasteRating: number, satisfactionRating: number, notes: string) => {
     const newFood: FoodItem = {
       id: crypto.randomUUID(),
       name,
-      rating,
+      tasteRating,
+      satisfactionRating,
       notes,
       date: new Date(),
     };

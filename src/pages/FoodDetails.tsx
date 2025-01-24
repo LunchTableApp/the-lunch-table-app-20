@@ -7,7 +7,8 @@ interface LocationState {
   food: {
     id: string;
     name: string;
-    rating: number;
+    tasteRating: number;
+    satisfactionRating: number;
     notes: string;
     date: Date;
   };
@@ -17,6 +18,26 @@ const FoodDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { food } = (location.state as LocationState) || { food: null };
+
+  const RatingDisplay = ({ label, rating }: { label: string; rating: number }) => (
+    <div className="mb-4">
+      <h2 className="text-lg font-semibold text-gray-700 mb-2">{label}</h2>
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((carrot) => (
+          <Carrot
+            key={carrot}
+            size={24}
+            className={cn(
+              "transition-colors rotate-180",
+              carrot <= rating
+                ? "fill-orange-400 text-orange-400"
+                : "text-gray-300"
+            )}
+          />
+        ))}
+      </div>
+    </div>
+  );
 
   if (!food) {
     return (
@@ -34,20 +55,10 @@ const FoodDetails = () => {
       <div className="container max-w-2xl">
         <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">{food.name}</h1>
-          <div className="flex mb-4">
-            {[1, 2, 3, 4, 5].map((carrot) => (
-              <Carrot
-                key={carrot}
-                size={24}
-                className={cn(
-                  "transition-colors rotate-180",
-                  carrot <= food.rating
-                    ? "fill-orange-400 text-orange-400"
-                    : "text-gray-300"
-                )}
-              />
-            ))}
-          </div>
+          
+          <RatingDisplay label="Taste Rating" rating={food.tasteRating} />
+          <RatingDisplay label="Satisfaction Rating" rating={food.satisfactionRating} />
+          
           {food.notes && (
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-700 mb-2">Notes</h2>

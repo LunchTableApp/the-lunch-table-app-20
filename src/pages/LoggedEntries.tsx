@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 interface FoodItem {
   id: string;
   name: string;
-  rating: number;
+  tasteRating: number;
+  satisfactionRating: number;
   notes: string;
   date: Date;
 }

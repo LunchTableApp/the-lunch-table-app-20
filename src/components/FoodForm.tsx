@@ -5,14 +5,16 @@ import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 
 interface FoodFormProps {
-  onSubmit: (name: string, rating: number, notes: string) => void;
+  onSubmit: (name: string, tasteRating: number, satisfactionRating: number, notes: string) => void;
 }
 
 export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   const [name, setName] = useState("");
-  const [rating, setRating] = useState(0);
+  const [tasteRating, setTasteRating] = useState(0);
+  const [satisfactionRating, setSatisfactionRating] = useState(0);
   const [notes, setNotes] = useState("");
-  const [hoveredRating, setHoveredRating] = useState(0);
+  const [hoveredTasteRating, setHoveredTasteRating] = useState(0);
+  const [hoveredSatisfactionRating, setHoveredSatisfactionRating] = useState(0);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,23 +27,66 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
       });
       return;
     }
-    if (rating === 0) {
+    if (tasteRating === 0 || satisfactionRating === 0) {
       toast({
         title: "Error",
-        description: "Please select a rating",
+        description: "Please rate both taste and satisfaction",
         variant: "destructive",
       });
       return;
     }
-    onSubmit(name, rating, notes);
+    onSubmit(name, tasteRating, satisfactionRating, notes);
     setName("");
-    setRating(0);
+    setTasteRating(0);
+    setSatisfactionRating(0);
     setNotes("");
     toast({
       title: "Success",
       description: "Food entry added successfully!",
     });
   };
+
+  const RatingSection = ({ 
+    label, 
+    rating, 
+    hoveredRating, 
+    setRating, 
+    setHoveredRating 
+  }: { 
+    label: string;
+    rating: number;
+    hoveredRating: number;
+    setRating: (value: number) => void;
+    setHoveredRating: (value: number) => void;
+  }) => (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((carrot) => (
+          <button
+            key={carrot}
+            type="button"
+            onClick={() => setRating(carrot)}
+            onMouseEnter={() => setHoveredRating(carrot)}
+            onMouseLeave={() => setHoveredRating(0)}
+            className="focus:outline-none"
+          >
+            <Carrot
+              size={24}
+              className={cn(
+                "transition-colors rotate-180",
+                carrot <= (hoveredRating || rating)
+                  ? "fill-orange-400 text-orange-400"
+                  : "text-gray-300 hover:text-orange-200"
+              )}
+            />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -58,33 +103,23 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
           placeholder="Enter food name..."
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Rating
-        </label>
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((carrot) => (
-            <button
-              key={carrot}
-              type="button"
-              onClick={() => setRating(carrot)}
-              onMouseEnter={() => setHoveredRating(carrot)}
-              onMouseLeave={() => setHoveredRating(0)}
-              className="focus:outline-none"
-            >
-              <Carrot
-                size={24}
-                className={cn(
-                  "transition-colors rotate-180",
-                  carrot <= (hoveredRating || rating)
-                    ? "fill-orange-400 text-orange-400"
-                    : "text-gray-300 hover:text-orange-200"
-                )}
-              />
-            </button>
-          ))}
-        </div>
-      </div>
+      
+      <RatingSection 
+        label="Taste Rating"
+        rating={tasteRating}
+        hoveredRating={hoveredTasteRating}
+        setRating={setTasteRating}
+        setHoveredRating={setHoveredTasteRating}
+      />
+
+      <RatingSection 
+        label="Satisfaction Rating"
+        rating={satisfactionRating}
+        hoveredRating={hoveredSatisfactionRating}
+        setRating={setSatisfactionRating}
+        setHoveredRating={setHoveredSatisfactionRating}
+      />
+
       <div className="mb-4">
         <label htmlFor="food-notes" className="block text-sm font-medium text-gray-700 mb-1">
           Notes
