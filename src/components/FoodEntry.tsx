@@ -1,4 +1,4 @@
-import { Star, Trash } from "lucide-react";
+import { Carrot, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FoodEntryProps {
@@ -34,13 +34,13 @@ export const FoodEntry = ({ id, name, rating, date, notes, onDelete }: FoodEntry
         </button>
       </div>
       <div className="flex mt-2">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
+        {[1, 2, 3, 4, 5].map((carrot) => (
+          <Carrot
+            key={carrot}
             size={20}
             className={cn(
-              "transition-colors",
-              star <= rating
+              "transition-colors rotate-180",
+              carrot <= rating
                 ? "fill-orange-400 text-orange-400"
                 : "text-gray-300"
             )}
