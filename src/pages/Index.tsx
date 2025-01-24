@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { FoodEntry } from "@/components/FoodEntry";
 import { FoodForm } from "@/components/FoodForm";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface FoodItem {
   id: string;
@@ -13,20 +13,8 @@ interface FoodItem {
 }
 
 const Index = () => {
-  const [foods, setFoods] = useState<FoodItem[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  // Load foods from localStorage on initial render
-  useEffect(() => {
-    const savedFoods = localStorage.getItem('foods');
-    if (savedFoods) {
-      setFoods(JSON.parse(savedFoods).map((food: any) => ({
-        ...food,
-        date: new Date(food.date)
-      })));
-    }
-  }, []);
 
   const handleAddFood = (name: string, rating: number, notes: string) => {
     const newFood: FoodItem = {
@@ -36,25 +24,18 @@ const Index = () => {
       notes,
       date: new Date(),
     };
-    const updatedFoods = [newFood, ...foods];
-    setFoods(updatedFoods);
+    
+    // Get current foods from localStorage
+    const savedFoods = localStorage.getItem('foods');
+    const currentFoods = savedFoods ? JSON.parse(savedFoods) : [];
+    const updatedFoods = [newFood, ...currentFoods];
+    
     // Save to localStorage before navigating
     localStorage.setItem('foods', JSON.stringify(updatedFoods));
     navigate("/food-details", { state: { food: newFood } });
     toast({
       title: "Food saved",
       description: "Your food entry has been saved successfully!",
-    });
-  };
-
-  const handleDeleteFood = (id: string) => {
-    const updatedFoods = foods.filter((food) => food.id !== id);
-    setFoods(updatedFoods);
-    // Update localStorage when deleting
-    localStorage.setItem('foods', JSON.stringify(updatedFoods));
-    toast({
-      title: "Food deleted",
-      description: "Your food entry has been deleted successfully!",
     });
   };
 
@@ -67,25 +48,18 @@ const Index = () => {
             alt="Eaten carrot logo" 
             className="w-20 h-20 mb-4 animate-fadeIn"
           />
-          <h1 className="text-4xl font-bold text-gray-800 text-center">
+          <h1 className="text-4xl font-bold text-gray-800 text-center mb-4">
             Food Logger
           </h1>
+          <Button 
+            onClick={() => navigate("/logged-entries")}
+            variant="outline"
+            className="mb-6"
+          >
+            View Logged Entries
+          </Button>
         </div>
         <FoodForm onSubmit={handleAddFood} />
-        <div className="space-y-4">
-          {foods.map((food) => (
-            <FoodEntry
-              key={food.id}
-              {...food}
-              onDelete={handleDeleteFood}
-            />
-          ))}
-          {foods.length === 0 && (
-            <p className="text-center text-gray-500 py-8">
-              No food entries yet. Start by adding one above!
-            </p>
-          )}
-        </div>
       </div>
     </div>
   );
