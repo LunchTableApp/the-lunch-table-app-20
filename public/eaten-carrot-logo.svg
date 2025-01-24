@@ -2,7 +2,8 @@
   <!-- Carrot body (triangle) -->
   <path d="M30 80 L50 20 L70 80 Z" fill="#ff6b35"/>
   
-  <!-- Carrot leaves (simple geometric shapes) -->
-  <path d="M40 25 L50 15 L60 25" stroke="#4ade80" stroke-width="3" fill="#4ade80"/>
-  <path d="M35 20 L50 10 L65 20" stroke="#4ade80" stroke-width="3" fill="#4ade80"/>
+  <!-- Enhanced carrot leaves (more detailed geometric shapes) -->
+  <path d="M35 25 C35 25 50 5 65 25" stroke="#4ade80" stroke-width="3" fill="none"/>
+  <path d="M30 20 C30 20 50 0 70 20" stroke="#4ade80" stroke-width="3" fill="none"/>
+  <path d="M40 15 L50 5 L60 15" stroke="#4ade80" stroke-width="3" fill="#4ade80"/>
 </svg>
