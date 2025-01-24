@@ -12,11 +12,11 @@ interface FoodEntryProps {
 
 export const FoodEntry = ({ id, name, rating, date, notes, onDelete }: FoodEntryProps) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-lg shadow-md p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-orange-400">
       <div className="flex justify-between items-start">
         <div>
-          <h3 className="font-semibold text-lg text-gray-800">{name}</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="font-semibold text-lg text-gray-800 hover:text-orange-600 transition-colors">{name}</h3>
+          <p className="text-sm text-orange-500">
             {date.toLocaleDateString()}
           </p>
           {notes && (
@@ -41,7 +41,7 @@ export const FoodEntry = ({ id, name, rating, date, notes, onDelete }: FoodEntry
             className={cn(
               "transition-colors",
               star <= rating
-                ? "fill-yellow-400 text-yellow-400"
+                ? "fill-orange-400 text-orange-400"
                 : "text-gray-300"
             )}
           />

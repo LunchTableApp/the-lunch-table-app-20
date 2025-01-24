@@ -38,11 +38,15 @@ const LoggedEntries = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-8">
       <div className="container max-w-2xl">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Logged Entries</h1>
-          <Button onClick={() => navigate("/")} variant="outline">
+          <h1 className="text-3xl font-bold text-orange-600">Logged Entries</h1>
+          <Button 
+            onClick={() => navigate("/")} 
+            variant="outline"
+            className="border-orange-400 text-orange-600 hover:bg-orange-50"
+          >
             Add New Entry
           </Button>
         </div>
@@ -55,7 +59,7 @@ const LoggedEntries = () => {
             />
           ))}
           {foods.length === 0 && (
-            <p className="text-center text-gray-500 py-8">
+            <p className="text-center text-orange-600/60 py-8">
               No food entries yet. Start by adding one!
             </p>
           )}
