@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FoodEntry } from "@/components/FoodEntry";
 import { FoodForm } from "@/components/FoodForm";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface FoodItem {
   id: string;
@@ -13,6 +14,18 @@ interface FoodItem {
 const Index = () => {
   const [foods, setFoods] = useState<FoodItem[]>([]);
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Load foods from localStorage on initial render
+  useEffect(() => {
+    const savedFoods = localStorage.getItem('foods');
+    if (savedFoods) {
+      setFoods(JSON.parse(savedFoods).map((food: any) => ({
+        ...food,
+        date: new Date(food.date)
+      })));
+    }
+  }, []);
 
   const handleAddFood = (name: string, rating: number) => {
     const newFood: FoodItem = {
@@ -21,12 +34,26 @@ const Index = () => {
       rating,
       date: new Date(),
     };
-    setFoods((prev) => [newFood, ...prev]);
+    const updatedFoods = [newFood, ...foods];
+    setFoods(updatedFoods);
+    // Save to localStorage before navigating
+    localStorage.setItem('foods', JSON.stringify(updatedFoods));
     navigate("/food-details", { state: { food: newFood } });
+    toast({
+      title: "Food saved",
+      description: "Your food entry has been saved successfully!",
+    });
   };
 
   const handleDeleteFood = (id: string) => {
-    setFoods((prev) => prev.filter((food) => food.id !== id));
+    const updatedFoods = foods.filter((food) => food.id !== id);
+    setFoods(updatedFoods);
+    // Update localStorage when deleting
+    localStorage.setItem('foods', JSON.stringify(updatedFoods));
+    toast({
+      title: "Food deleted",
+      description: "Your food entry has been deleted successfully!",
+    });
   };
 
   return (
