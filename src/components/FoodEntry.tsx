@@ -35,16 +35,22 @@ export const FoodEntry = ({
       <span className="text-sm text-gray-600">{label}</span>
       <div className="flex">
         {[1, 2, 3, 4, 5].map((carrot) => (
-          <Carrot
-            key={carrot}
-            size={20}
-            className={cn(
-              "transition-colors rotate-180",
-              carrot <= rating
-                ? "fill-orange-400 text-orange-400"
-                : "text-gray-300"
+          <div key={carrot} className="relative">
+            <Carrot
+              size={20}
+              className={cn(
+                "transition-colors rotate-180 stroke-[1.5px] stroke-black",
+                carrot <= rating
+                  ? "fill-orange-400 text-orange-400"
+                  : "text-gray-300"
+              )}
+            />
+            {carrot <= rating && (
+              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="w-2 h-3 bg-green-400 rounded-full rotate-45" />
+              </div>
             )}
-          />
+          </div>
         ))}
       </div>
     </div>
