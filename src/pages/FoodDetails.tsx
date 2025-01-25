@@ -59,7 +59,7 @@ const FoodDetails = () => {
         <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-3xl font-bold text-gray-800">{food.name}</h1>
-            <span className="text-lg bg-orange-100 text-orange-600 px-3 py-1 rounded-full">
+            <span className="text-lg bg-green-100 text-green-600 px-3 py-1 rounded-full">
               Average Rating: {averageRating}★
             </span>
           </div>
