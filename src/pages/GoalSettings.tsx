@@ -1,24 +1,44 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormDescription,
+} from "@/components/ui/form";
+
+interface GoalFormValues {
+  monthlyGoal: string;
+}
 
 const GoalSettings = () => {
-  const [monthlyGoal, setMonthlyGoal] = useState<string>("");
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const form = useForm<GoalFormValues>({
+    defaultValues: {
+      monthlyGoal: "",
+    },
+  });
 
   useEffect(() => {
     const savedGoal = localStorage.getItem('monthlyFoodGoal');
     if (savedGoal) {
-      setMonthlyGoal(savedGoal);
+      form.setValue('monthlyGoal', savedGoal);
     }
-  }, []);
+  }, [form]);
 
-  const handleSaveGoal = () => {
-    if (!monthlyGoal || isNaN(Number(monthlyGoal)) || Number(monthlyGoal) < 1) {
+  const onSubmit = (values: GoalFormValues) => {
+    const goalNumber = Number(values.monthlyGoal);
+    
+    if (!values.monthlyGoal || isNaN(goalNumber) || goalNumber < 1) {
       toast({
         title: "Invalid goal",
         description: "Please enter a valid number greater than 0",
@@ -27,7 +47,7 @@ const GoalSettings = () => {
       return;
     }
 
-    localStorage.setItem('monthlyFoodGoal', monthlyGoal);
+    localStorage.setItem('monthlyFoodGoal', values.monthlyGoal);
     toast({
       title: "Goal saved",
       description: "Your monthly food goal has been saved successfully!",
@@ -49,29 +69,37 @@ const GoalSettings = () => {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="monthlyGoal" className="text-sm font-medium text-gray-700">
-                Monthly New Foods Goal
-              </label>
-              <div className="flex gap-4">
-                <Input
-                  id="monthlyGoal"
-                  type="number"
-                  min="1"
-                  value={monthlyGoal}
-                  onChange={(e) => setMonthlyGoal(e.target.value)}
-                  placeholder="Enter number of new foods"
-                  className="max-w-[200px]"
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="monthlyGoal"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Monthly New Foods Goal</FormLabel>
+                      <div className="flex gap-4">
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min="1"
+                            placeholder="Enter number of new foods"
+                            className="max-w-[200px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <Button type="submit">
+                          Save Goal
+                        </Button>
+                      </div>
+                      <FormDescription>
+                        Set a goal for how many new foods you want to try each month
+                      </FormDescription>
+                    </FormItem>
+                  )}
                 />
-                <Button onClick={handleSaveGoal}>
-                  Save Goal
-                </Button>
-              </div>
-              <p className="text-sm text-gray-500">
-                Set a goal for how many new foods you want to try each month
-              </p>
-            </div>
+              </form>
+            </Form>
           </CardContent>
         </Card>
       </div>
