@@ -50,7 +50,7 @@ export const FoodEntry = ({
         <div>
           <h3 className="font-semibold text-lg text-gray-800 hover:text-orange-600 transition-colors">{name}</h3>
           <div className="flex items-center gap-2">
-            <p className="text-sm text-orange-500">
+            <p className="text-sm text-black">
               {date.toLocaleDateString()}
             </p>
             <span className="text-sm bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
