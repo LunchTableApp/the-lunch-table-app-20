@@ -39,17 +39,12 @@ export const FoodEntry = ({
             <Carrot
               size={20}
               className={cn(
-                "transition-colors rotate-180 stroke-[1.5px] stroke-black",
+                "transition-colors rotate-180",
                 carrot <= rating
                   ? "fill-orange-400 text-orange-400"
                   : "text-gray-300"
               )}
             />
-            {carrot <= rating && (
-              <div className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="w-1.5 h-2 bg-green-500 rounded-sm -rotate-45" />
-              </div>
-            )}
           </div>
         ))}
       </div>
