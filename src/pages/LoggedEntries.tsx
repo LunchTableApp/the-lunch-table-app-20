@@ -44,13 +44,22 @@ const LoggedEntries = () => {
       <div className="container max-w-2xl">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-black">Logged Entries</h1>
-          <Button 
-            onClick={() => navigate("/")} 
-            variant="outline"
-            className="border-green-400 text-green-600 hover:bg-green-50"
-          >
-            Add New Entry
-          </Button>
+          <div className="flex gap-4">
+            <Button 
+              onClick={() => navigate("/goal-settings")} 
+              variant="outline"
+              className="border-primary text-primary hover:bg-primary/10"
+            >
+              Goal Settings
+            </Button>
+            <Button 
+              onClick={() => navigate("/")} 
+              variant="outline"
+              className="border-green-400 text-green-600 hover:bg-green-50"
+            >
+              Add New Entry
+            </Button>
+          </div>
         </div>
         <div className="space-y-4">
           {foods.map((food) => (
