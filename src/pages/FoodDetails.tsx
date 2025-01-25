@@ -51,11 +51,18 @@ const FoodDetails = () => {
     );
   }
 
+  const averageRating = ((food.tasteRating + food.satisfactionRating + food.fullnessRating) / 3).toFixed(1);
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container max-w-2xl">
         <div className="bg-white rounded-lg shadow-lg p-6 animate-fade-in">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">{food.name}</h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-3xl font-bold text-gray-800">{food.name}</h1>
+            <span className="text-lg bg-orange-100 text-orange-600 px-3 py-1 rounded-full">
+              Average Rating: {averageRating}★
+            </span>
+          </div>
           
           <RatingDisplay label="Taste Rating" rating={food.tasteRating} />
           <RatingDisplay label="Satisfaction Rating" rating={food.satisfactionRating} />

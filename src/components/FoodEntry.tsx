@@ -22,6 +22,8 @@ export const FoodEntry = ({
   notes, 
   onDelete 
 }: FoodEntryProps) => {
+  const averageRating = ((tasteRating + satisfactionRating + fullnessRating) / 3).toFixed(1);
+
   const RatingDisplay = ({ label, rating }: { label: string; rating: number }) => (
     <div className="flex flex-col gap-1">
       <span className="text-sm text-gray-600">{label}</span>
@@ -47,9 +49,14 @@ export const FoodEntry = ({
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-semibold text-lg text-gray-800 hover:text-orange-600 transition-colors">{name}</h3>
-          <p className="text-sm text-orange-500">
-            {date.toLocaleDateString()}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-orange-500">
+              {date.toLocaleDateString()}
+            </p>
+            <span className="text-sm bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">
+              Avg: {averageRating}★
+            </span>
+          </div>
           {notes && (
             <p className="mt-2 text-gray-600 text-sm">
               {notes}
