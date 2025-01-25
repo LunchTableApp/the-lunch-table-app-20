@@ -3,6 +3,7 @@ import { FoodEntry } from "@/components/FoodEntry";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { CabbageTracker } from "@/components/CabbageTracker";
 
 interface FoodItem {
   id: string;
@@ -12,6 +13,7 @@ interface FoodItem {
   fullnessRating: number;
   notes: string;
   date: Date;
+  isNewFood?: boolean;
 }
 
 const LoggedEntries = () => {
@@ -39,6 +41,19 @@ const LoggedEntries = () => {
     });
   };
 
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const newFoodsThisMonth = foods.filter(
+    food => {
+      const foodDate = new Date(food.date);
+      return food.isNewFood && 
+             foodDate.getMonth() === currentMonth && 
+             foodDate.getFullYear() === currentYear;
+    }
+  ).length;
+
+  const monthlyGoal = parseInt(localStorage.getItem('monthlyFoodGoal') || '5');
+
   return (
     <div className="min-h-screen bg-white py-8">
       <div className="container max-w-2xl">
@@ -61,6 +76,12 @@ const LoggedEntries = () => {
             </Button>
           </div>
         </div>
+
+        <CabbageTracker 
+          newFoodsCount={newFoodsThisMonth}
+          monthlyGoal={monthlyGoal}
+        />
+
         <div className="space-y-4">
           {foods.map((food) => (
             <FoodEntry

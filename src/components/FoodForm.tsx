@@ -4,9 +4,10 @@ import { useToast } from "@/hooks/use-toast";
 import { RatingSection } from "./food/RatingSection";
 import { NotesSection } from "./food/NotesSection";
 import { FoodNameInput } from "./food/FoodNameInput";
+import { Switch } from "@/components/ui/switch";
 
 interface FoodFormProps {
-  onSubmit: (name: string, tasteRating: number, satisfactionRating: number, fullnessRating: number, notes: string) => void;
+  onSubmit: (name: string, tasteRating: number, satisfactionRating: number, fullnessRating: number, notes: string, isNewFood: boolean) => void;
 }
 
 export const FoodForm = ({ onSubmit }: FoodFormProps) => {
@@ -15,6 +16,7 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   const [satisfactionRating, setSatisfactionRating] = useState(0);
   const [fullnessRating, setFullnessRating] = useState(0);
   const [notes, setNotes] = useState("");
+  const [isNewFood, setIsNewFood] = useState(false);
   const [hoveredTasteRating, setHoveredTasteRating] = useState(0);
   const [hoveredSatisfactionRating, setHoveredSatisfactionRating] = useState(0);
   const [hoveredFullnessRating, setHoveredFullnessRating] = useState(0);
@@ -38,12 +40,13 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
       });
       return;
     }
-    onSubmit(name, tasteRating, satisfactionRating, fullnessRating, notes);
+    onSubmit(name, tasteRating, satisfactionRating, fullnessRating, notes, isNewFood);
     setName("");
     setTasteRating(0);
     setSatisfactionRating(0);
     setFullnessRating(0);
     setNotes("");
+    setIsNewFood(false);
     toast({
       title: "Success",
       description: "Food entry added successfully!",
@@ -54,6 +57,20 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
       <FoodNameInput name={name} setName={setName} />
       
+      <div className="flex items-center space-x-2 mb-4">
+        <Switch
+          id="new-food"
+          checked={isNewFood}
+          onCheckedChange={setIsNewFood}
+        />
+        <label
+          htmlFor="new-food"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          This is a new food I'm trying
+        </label>
+      </div>
+
       <RatingSection 
         label="Taste Rating"
         rating={tasteRating}
