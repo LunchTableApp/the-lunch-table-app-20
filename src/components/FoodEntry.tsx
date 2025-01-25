@@ -46,8 +46,8 @@ export const FoodEntry = ({
               )}
             />
             {carrot <= rating && (
-              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="w-2 h-3 bg-green-400 rounded-full rotate-45" />
+              <div className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="w-1.5 h-2 bg-green-500 rounded-sm -rotate-45" />
               </div>
             )}
           </div>
