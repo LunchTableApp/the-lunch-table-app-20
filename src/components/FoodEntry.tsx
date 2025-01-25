@@ -45,7 +45,7 @@ export const FoodEntry = ({
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-orange-400 border-2 border-black">
+    <div className="bg-white rounded-lg shadow-md p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-orange-400">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-semibold text-lg text-gray-800 hover:text-orange-600 transition-colors">{name}</h3>
