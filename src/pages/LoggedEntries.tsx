@@ -47,7 +47,7 @@ const LoggedEntries = () => {
           <Button 
             onClick={() => navigate("/")} 
             variant="outline"
-            className="border-orange-400 text-orange-600 hover:bg-orange-50"
+            className="border-green-400 text-green-600 hover:bg-green-50"
           >
             Add New Entry
           </Button>
