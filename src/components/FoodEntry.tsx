@@ -23,6 +23,12 @@ export const FoodEntry = ({
   onDelete 
 }: FoodEntryProps) => {
   const averageRating = ((tasteRating + satisfactionRating + fullnessRating) / 3).toFixed(1);
+  
+  const getAverageColor = (rating: number) => {
+    if (rating <= 2) return "text-red-500 bg-red-50";
+    if (rating <= 3.5) return "text-yellow-500 bg-yellow-50";
+    return "text-green-600 bg-green-50";
+  };
 
   const RatingDisplay = ({ label, rating }: { label: string; rating: number }) => (
     <div className="flex flex-col gap-1">
@@ -53,7 +59,7 @@ export const FoodEntry = ({
             <p className="text-sm text-black">
               {date.toLocaleDateString()}
             </p>
-            <span className="text-sm bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
+            <span className={cn("text-sm px-2 py-0.5 rounded-full", getAverageColor(parseFloat(averageRating)))}>
               Avg: {averageRating}★
             </span>
           </div>
