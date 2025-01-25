@@ -40,7 +40,7 @@ const LoggedEntries = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-8">
+    <div className="min-h-screen bg-white py-8">
       <div className="container max-w-2xl">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-black">Logged Entries</h1>
