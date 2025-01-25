@@ -53,7 +53,7 @@ export const FoodEntry = ({
             <p className="text-sm text-orange-500">
               {date.toLocaleDateString()}
             </p>
-            <span className="text-sm bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">
+            <span className="text-sm bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
               Avg: {averageRating}★
             </span>
           </div>
