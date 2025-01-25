@@ -48,7 +48,7 @@ const LoggedEntries = () => {
             <Button 
               onClick={() => navigate("/goal-settings")} 
               variant="outline"
-              className="border-primary text-primary hover:bg-primary/10"
+              className="border-black text-black hover:bg-black/10"
             >
               Goal Settings
             </Button>
