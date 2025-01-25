@@ -6,6 +6,7 @@ interface FoodEntryProps {
   name: string;
   tasteRating: number;
   satisfactionRating: number;
+  fullnessRating: number;
   date: Date;
   notes: string;
   onDelete: (id: string) => void;
@@ -15,7 +16,8 @@ export const FoodEntry = ({
   id, 
   name, 
   tasteRating, 
-  satisfactionRating, 
+  satisfactionRating,
+  fullnessRating, 
   date, 
   notes, 
   onDelete 
@@ -65,6 +67,7 @@ export const FoodEntry = ({
       <div className="flex gap-6 mt-2">
         <RatingDisplay label="Taste" rating={tasteRating} />
         <RatingDisplay label="Satisfaction" rating={satisfactionRating} />
+        <RatingDisplay label="Fullness" rating={fullnessRating} />
       </div>
     </div>
   );

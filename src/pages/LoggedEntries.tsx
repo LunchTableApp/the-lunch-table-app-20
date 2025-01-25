@@ -9,6 +9,7 @@ interface FoodItem {
   name: string;
   tasteRating: number;
   satisfactionRating: number;
+  fullnessRating: number;
   notes: string;
   date: Date;
 }

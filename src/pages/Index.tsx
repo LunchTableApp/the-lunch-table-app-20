@@ -9,6 +9,7 @@ interface FoodItem {
   name: string;
   tasteRating: number;
   satisfactionRating: number;
+  fullnessRating: number;
   notes: string;
   date: Date;
 }
@@ -17,12 +18,19 @@ const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleAddFood = (name: string, tasteRating: number, satisfactionRating: number, notes: string) => {
+  const handleAddFood = (
+    name: string, 
+    tasteRating: number, 
+    satisfactionRating: number, 
+    fullnessRating: number,
+    notes: string
+  ) => {
     const newFood: FoodItem = {
       id: crypto.randomUUID(),
       name,
       tasteRating,
       satisfactionRating,
+      fullnessRating,
       notes,
       date: new Date(),
     };

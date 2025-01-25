@@ -9,6 +9,7 @@ interface LocationState {
     name: string;
     tasteRating: number;
     satisfactionRating: number;
+    fullnessRating: number;
     notes: string;
     date: Date;
   };
@@ -58,6 +59,7 @@ const FoodDetails = () => {
           
           <RatingDisplay label="Taste Rating" rating={food.tasteRating} />
           <RatingDisplay label="Satisfaction Rating" rating={food.satisfactionRating} />
+          <RatingDisplay label="Fullness Rating" rating={food.fullnessRating} />
           
           {food.notes && (
             <div className="mb-6">
