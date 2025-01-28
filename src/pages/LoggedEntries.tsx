@@ -4,17 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { CabbageTracker } from "@/components/CabbageTracker";
-
-interface FoodItem {
-  id: string;
-  name: string;
-  tasteRating: number;
-  satisfactionRating: number;
-  fullnessRating: number;
-  notes: string;
-  date: Date;
-  isNewFood?: boolean;
-}
+import type { FoodItem } from "@/types/food";
 
 const LoggedEntries = () => {
   const [foods, setFoods] = useState<FoodItem[]>([]);

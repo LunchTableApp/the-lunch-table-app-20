@@ -4,11 +4,8 @@ import { useToast } from "@/hooks/use-toast";
 import { RatingSection } from "./food/RatingSection";
 import { NotesSection } from "./food/NotesSection";
 import { FoodNameInput } from "./food/FoodNameInput";
-import { Switch } from "@/components/ui/switch";
-
-interface FoodFormProps {
-  onSubmit: (name: string, tasteRating: number, satisfactionRating: number, fullnessRating: number, notes: string, isNewFood: boolean) => void;
-}
+import { FormHeader } from "./food/FormHeader";
+import type { FoodFormProps } from "@/types/food";
 
 export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   const [name, setName] = useState("");
@@ -56,21 +53,8 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
       <FoodNameInput name={name} setName={setName} />
+      <FormHeader isNewFood={isNewFood} setIsNewFood={setIsNewFood} />
       
-      <div className="flex items-center space-x-2 mb-4">
-        <Switch
-          id="new-food"
-          checked={isNewFood}
-          onCheckedChange={setIsNewFood}
-        />
-        <label
-          htmlFor="new-food"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          This is a new food I'm trying
-        </label>
-      </div>
-
       <RatingSection 
         label="Taste Rating"
         rating={tasteRating}
