@@ -4,32 +4,69 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { CabbageTracker } from "@/components/CabbageTracker";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 import type { FoodItem } from "@/types/food";
+import type { DbFoodEntry } from "@/types/database";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LoggedEntries = () => {
-  const [foods, setFoods] = useState<FoodItem[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const savedFoods = localStorage.getItem('foods');
-    if (savedFoods) {
-      setFoods(JSON.parse(savedFoods).map((food: any) => ({
-        ...food,
-        date: new Date(food.date)
-      })));
+  const { data: foods = [], isLoading } = useQuery({
+    queryKey: ['foods', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('food_entries')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return (data as DbFoodEntry[]).map((entry): FoodItem => ({
+        id: entry.id,
+        name: entry.name,
+        tasteRating: entry.taste_rating,
+        satisfactionRating: entry.satisfaction_rating,
+        fullnessRating: entry.fullness_rating,
+        notes: entry.notes,
+        date: new Date(entry.date),
+        isNewFood: entry.is_new_food
+      }));
+    },
+    enabled: !!user
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('food_entries')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user?.id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['foods'] });
+      toast({
+        title: "Food deleted",
+        description: "Your food entry has been deleted successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete food entry. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Delete error:', error);
     }
-  }, []);
-
-  const handleDeleteFood = (id: string) => {
-    const updatedFoods = foods.filter((food) => food.id !== id);
-    setFoods(updatedFoods);
-    localStorage.setItem('foods', JSON.stringify(updatedFoods));
-    toast({
-      title: "Food deleted",
-      description: "Your food entry has been deleted successfully!",
-    });
-  };
+  });
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
@@ -43,6 +80,16 @@ const LoggedEntries = () => {
   ).length;
 
   const monthlyGoal = parseInt(localStorage.getItem('monthlyFoodGoal') || '5');
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white py-8">
+        <div className="container max-w-2xl">
+          <p className="text-center text-gray-500">Loading your food entries...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white py-8">
@@ -77,7 +124,7 @@ const LoggedEntries = () => {
             <FoodEntry
               key={food.id}
               {...food}
-              onDelete={handleDeleteFood}
+              onDelete={() => deleteMutation.mutate(food.id)}
             />
           ))}
           {foods.length === 0 && (
