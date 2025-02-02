@@ -157,9 +157,9 @@ const LoggedEntries = () => {
             <SelectContent>
               <SelectItem value="recent">Most Recent</SelectItem>
               <SelectItem value="rating">Highest Rated</SelectItem>
-              <SelectItem value="taste">Best Taste</SelectItem>
-              <SelectItem value="satisfaction">Best Satisfaction</SelectItem>
-              <SelectItem value="fullness">Best Fullness</SelectItem>
+              <SelectItem value="taste">Taste</SelectItem>
+              <SelectItem value="satisfaction">Satisfaction</SelectItem>
+              <SelectItem value="fullness">Fullness</SelectItem>
             </SelectContent>
           </Select>
         </div>
