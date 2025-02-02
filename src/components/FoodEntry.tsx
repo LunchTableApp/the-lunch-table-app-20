@@ -41,7 +41,7 @@ export const FoodEntry = ({
               className={cn(
                 "transition-colors rotate-180",
                 carrot <= rating
-                  ? "fill-green-400 text-green-400"
+                  ? "fill-orange-400 text-orange-400"
                   : "text-gray-300"
               )}
             />
