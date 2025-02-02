@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { Slider } from "@/components/ui/slider";
 import {
   Form,
   FormControl,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 
 interface GoalFormValues {
-  monthlyGoal: string;
+  monthlyGoal: number;
 }
 
 const GoalSettings = () => {
@@ -24,30 +24,28 @@ const GoalSettings = () => {
 
   const form = useForm<GoalFormValues>({
     defaultValues: {
-      monthlyGoal: "",
+      monthlyGoal: 1,
     },
   });
 
   useEffect(() => {
     const savedGoal = localStorage.getItem('monthlyFoodGoal');
     if (savedGoal) {
-      form.setValue('monthlyGoal', savedGoal);
+      form.setValue('monthlyGoal', Number(savedGoal));
     }
   }, [form]);
 
   const onSubmit = (values: GoalFormValues) => {
-    const goalNumber = Number(values.monthlyGoal);
-    
-    if (!values.monthlyGoal || isNaN(goalNumber) || goalNumber < 1) {
+    if (!values.monthlyGoal || values.monthlyGoal < 1) {
       toast({
         title: "Invalid goal",
-        description: "Please enter a valid number greater than 0",
+        description: "Please select a valid number between 1 and 50",
         variant: "destructive",
       });
       return;
     }
 
-    localStorage.setItem('monthlyFoodGoal', values.monthlyGoal);
+    localStorage.setItem('monthlyFoodGoal', String(values.monthlyGoal));
     toast({
       title: "Goal saved",
       description: "Your monthly food goal has been saved successfully!",
@@ -75,29 +73,28 @@ const GoalSettings = () => {
                 <FormField
                   control={form.control}
                   name="monthlyGoal"
-                  render={({ field }) => (
+                  render={({ field: { value, onChange } }) => (
                     <FormItem>
-                      <FormLabel>Monthly New Foods Goal</FormLabel>
-                      <div className="flex gap-4">
-                        <FormControl>
-                          <Input
-                            type="number"
-                            min="1"
-                            placeholder="Enter number of new foods"
-                            className="max-w-[200px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <Button type="submit">
-                          Save Goal
-                        </Button>
-                      </div>
+                      <FormLabel>Monthly New Foods Goal: {value}</FormLabel>
+                      <FormControl>
+                        <Slider
+                          min={1}
+                          max={50}
+                          step={1}
+                          value={[value]}
+                          onValueChange={(vals) => onChange(vals[0])}
+                          className="py-4"
+                        />
+                      </FormControl>
                       <FormDescription>
-                        Set a goal for how many new foods you want to try each month
+                        Set a goal for how many new foods you want to try each month (1-50)
                       </FormDescription>
                     </FormItem>
                   )}
                 />
+                <Button type="submit">
+                  Save Goal
+                </Button>
               </form>
             </Form>
           </CardContent>
