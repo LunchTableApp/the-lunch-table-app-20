@@ -53,7 +53,8 @@ const AuthPage = () => {
         default:
           // Handle any error events
           if (event.includes('ERROR')) {
-            const errorMessage = session?.error?.message || "An error occurred during authentication.";
+            const error = (session as unknown as { error: AuthError })?.error;
+            const errorMessage = error?.message || "An error occurred during authentication.";
             let description = errorMessage;
 
             if (errorMessage.includes("Invalid login credentials")) {
