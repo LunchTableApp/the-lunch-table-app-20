@@ -47,32 +47,32 @@ const AuthPage = () => {
             description: "You have successfully signed in.",
           });
           break;
+        case 'INITIAL_SESSION':
+          // Handle initial session load
+          break;
+        default:
+          // Handle any error events
+          if (event.includes('ERROR')) {
+            const errorMessage = session?.error?.message || "An error occurred during authentication.";
+            let description = errorMessage;
+
+            if (errorMessage.includes("Invalid login credentials")) {
+              description = "Invalid email or password. Please try again.";
+            } else if (errorMessage.includes("Email not confirmed")) {
+              description = "Please verify your email address before signing in.";
+            }
+
+            toast({
+              title: "Authentication Error",
+              description: description,
+              variant: "destructive",
+            });
+          }
       }
     });
 
-    // Handle initial auth errors
-    const handleAuthError = (error: AuthError) => {
-      let errorMessage = "An error occurred during authentication.";
-      
-      if (error.message.includes("Invalid login credentials")) {
-        errorMessage = "Invalid email or password. Please try again.";
-      } else if (error.message.includes("Email not confirmed")) {
-        errorMessage = "Please verify your email address before signing in.";
-      }
-
-      toast({
-        title: "Authentication Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    };
-
-    // Subscribe to auth error events
-    const authErrorSubscription = supabase.auth.onError(handleAuthError);
-
     return () => {
       subscription.unsubscribe();
-      authErrorSubscription.unsubscribe();
     };
   }, [toast]);
 
