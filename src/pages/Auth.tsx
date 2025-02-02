@@ -61,6 +61,11 @@ const AuthPage = () => {
               description = "Invalid email or password. Please try again.";
             } else if (errorMessage.includes("Email not confirmed")) {
               description = "Please verify your email address before signing in.";
+            } else if (errorMessage.includes("over_email_send_rate_limit")) {
+              // Extract the waiting time from the error message if available
+              const timeMatch = errorMessage.match(/\d+/);
+              const waitTime = timeMatch ? timeMatch[0] : "60";
+              description = `Too many attempts. Please wait ${waitTime} seconds before trying again.`;
             }
 
             toast({
