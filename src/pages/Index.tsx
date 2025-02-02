@@ -77,7 +77,7 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container max-w-2xl">
         <div className="flex flex-col items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 text-center mb-4">
+          <h1 className="text-4xl font-bold text-primary text-center mb-4">
             Food Logger
           </h1>
           <Button 
