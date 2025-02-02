@@ -20,18 +20,26 @@ const AuthPage = () => {
 
   // Listen for auth state changes to handle errors
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'USER_DELETED') {
-        toast({
-          title: "Account Deleted",
-          description: "Your account has been successfully deleted.",
-          variant: "destructive",
-        });
-      } else if (event === 'PASSWORD_RECOVERY') {
-        toast({
-          title: "Password Recovery",
-          description: "Check your email for password reset instructions.",
-        });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      switch (event) {
+        case 'SIGNED_OUT':
+          toast({
+            title: "Signed Out",
+            description: "You have been successfully signed out.",
+          });
+          break;
+        case 'PASSWORD_RECOVERY':
+          toast({
+            title: "Password Recovery",
+            description: "Check your email for password reset instructions.",
+          });
+          break;
+        case 'USER_UPDATED':
+          toast({
+            title: "Account Updated",
+            description: "Your account has been successfully updated.",
+          });
+          break;
       }
     });
 
