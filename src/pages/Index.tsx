@@ -23,16 +23,18 @@ const Index = () => {
     }) => {
       if (!user) throw new Error("User must be logged in");
 
-      const { error } = await supabase.from('food_entries').insert({
-        user_id: user.id,
-        name: newFood.name,
-        taste_rating: newFood.tasteRating,
-        satisfaction_rating: newFood.satisfactionRating,
-        fullness_rating: newFood.fullnessRating,
-        notes: newFood.notes,
-        is_new_food: newFood.isNewFood,
-        date: new Date().toISOString(),
-      });
+      const { error } = await supabase
+        .from('food_entries')
+        .insert({
+          user_id: user.id,
+          name: newFood.name,
+          taste_rating: newFood.tasteRating,
+          satisfaction_rating: newFood.satisfactionRating,
+          fullness_rating: newFood.fullnessRating,
+          notes: newFood.notes,
+          is_new_food: newFood.isNewFood,
+          date: new Date().toISOString(),
+        });
 
       if (error) throw error;
     },
