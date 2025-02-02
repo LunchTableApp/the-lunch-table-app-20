@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { AuthError } from '@supabase/supabase-js';
 
 const AuthPage = () => {
   const { toast } = useToast();
@@ -18,9 +19,9 @@ const AuthPage = () => {
     }
   }, [user, navigate]);
 
-  // Listen for auth state changes to handle errors
+  // Listen for auth state changes to handle errors and success messages
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       switch (event) {
         case 'SIGNED_OUT':
           toast({
@@ -40,11 +41,38 @@ const AuthPage = () => {
             description: "Your account has been successfully updated.",
           });
           break;
+        case 'SIGNED_IN':
+          toast({
+            title: "Welcome back!",
+            description: "You have successfully signed in.",
+          });
+          break;
       }
     });
 
+    // Handle initial auth errors
+    const handleAuthError = (error: AuthError) => {
+      let errorMessage = "An error occurred during authentication.";
+      
+      if (error.message.includes("Invalid login credentials")) {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (error.message.includes("Email not confirmed")) {
+        errorMessage = "Please verify your email address before signing in.";
+      }
+
+      toast({
+        title: "Authentication Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    };
+
+    // Subscribe to auth error events
+    const authErrorSubscription = supabase.auth.onError(handleAuthError);
+
     return () => {
       subscription.unsubscribe();
+      authErrorSubscription.unsubscribe();
     };
   }, [toast]);
 
