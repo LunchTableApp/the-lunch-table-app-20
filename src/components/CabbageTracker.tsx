@@ -23,13 +23,12 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
               <div
                 key={index}
                 className={`absolute w-8 h-8 rounded-full transition-all duration-300 ${
-                  filled ? 'bg-green-500 animate-bounce' : 'bg-gray-200'
+                  filled ? 'bg-green-500' : 'bg-gray-200'
                 } ${isGoalCompleted ? 'scale-110' : ''}`}
                 style={{
                   left: `${x + radius}px`,
                   top: `${y + radius}px`,
                   transform: 'translate(-50%, -50%)',
-                  animationDelay: `${index * 0.1}s`,
                 }}
               />
             );
@@ -54,7 +53,7 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
       </div>
       <div className="text-center">
         {isGoalCompleted ? (
-          <p className="text-lg font-bold text-green-500 animate-bounce">
+          <p className="text-lg font-bold text-green-500">
             🎉 Congratulations! You've reached your monthly goal! 🎉
           </p>
         ) : (
