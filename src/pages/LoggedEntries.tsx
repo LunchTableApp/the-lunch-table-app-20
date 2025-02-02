@@ -9,12 +9,20 @@ import { supabase } from "@/integrations/supabase/client";
 import type { FoodItem } from "@/types/food";
 import type { DbFoodEntry } from "@/types/database";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const LoggedEntries = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [sortBy, setSortBy] = useState<string>("recent");
 
   const { data: foods = [], isLoading } = useQuery({
     queryKey: ['foods', user?.id],
@@ -65,6 +73,25 @@ const LoggedEntries = () => {
         variant: "destructive",
       });
       console.error('Delete error:', error);
+    }
+  });
+
+  const sortedFoods = [...foods].sort((a, b) => {
+    switch (sortBy) {
+      case "recent":
+        return b.date.getTime() - a.date.getTime();
+      case "rating":
+        const avgA = (a.tasteRating + a.satisfactionRating + a.fullnessRating) / 3;
+        const avgB = (b.tasteRating + b.satisfactionRating + b.fullnessRating) / 3;
+        return avgB - avgA;
+      case "taste":
+        return b.tasteRating - a.tasteRating;
+      case "satisfaction":
+        return b.satisfactionRating - a.satisfactionRating;
+      case "fullness":
+        return b.fullnessRating - a.fullnessRating;
+      default:
+        return 0;
     }
   });
 
@@ -119,8 +146,26 @@ const LoggedEntries = () => {
           monthlyGoal={monthlyGoal}
         />
 
+        <div className="mb-6">
+          <Select
+            value={sortBy}
+            onValueChange={setSortBy}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Sort by..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">Most Recent</SelectItem>
+              <SelectItem value="rating">Highest Rated</SelectItem>
+              <SelectItem value="taste">Best Taste</SelectItem>
+              <SelectItem value="satisfaction">Best Satisfaction</SelectItem>
+              <SelectItem value="fullness">Best Fullness</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="space-y-4">
-          {foods.map((food) => (
+          {sortedFoods.map((food) => (
             <FoodEntry
               key={food.id}
               {...food}
