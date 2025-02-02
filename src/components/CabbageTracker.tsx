@@ -6,6 +6,7 @@ interface CabbageTrackerProps {
 export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerProps) => {
   const percentage = Math.min((newFoodsCount / monthlyGoal) * 100, 100);
   const leaves = Array.from({ length: monthlyGoal }, (_, i) => i < newFoodsCount);
+  const isGoalCompleted = newFoodsCount >= monthlyGoal;
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8 animate-fadeIn">
@@ -21,23 +22,46 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
             return (
               <div
                 key={index}
-                className={`absolute w-8 h-8 rounded-full transition-colors duration-300 ${
-                  filled ? 'bg-green-500' : 'bg-gray-200'
-                }`}
+                className={`absolute w-8 h-8 rounded-full transition-all duration-300 ${
+                  filled ? 'bg-green-500 animate-bounce' : 'bg-gray-200'
+                } ${isGoalCompleted ? 'scale-110' : ''}`}
                 style={{
                   left: `${x + radius}px`,
                   top: `${y + radius}px`,
                   transform: 'translate(-50%, -50%)',
+                  animationDelay: `${index * 0.1}s`,
                 }}
               />
             );
           })}
+          {isGoalCompleted && (
+            <>
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div
+                  key={`confetti-${i}`}
+                  className="absolute w-2 h-2 bg-primary animate-ping"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDuration: `${1 + Math.random()}s`,
+                    animationDelay: `${Math.random() * 0.5}s`,
+                  }}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div className="text-center">
-        <p className="text-lg font-medium">
-          {newFoodsCount} of {monthlyGoal} new foods tried
-        </p>
+        {isGoalCompleted ? (
+          <p className="text-lg font-bold text-green-500 animate-bounce">
+            🎉 Congratulations! You've reached your monthly goal! 🎉
+          </p>
+        ) : (
+          <p className="text-lg font-medium">
+            {newFoodsCount} of {monthlyGoal} new foods tried
+          </p>
+        )}
         <p className="text-sm text-gray-500">
           {percentage.toFixed(0)}% of monthly goal
         </p>
