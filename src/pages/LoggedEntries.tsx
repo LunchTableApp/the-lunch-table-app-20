@@ -110,8 +110,8 @@ const LoggedEntries = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white py-8">
-        <div className="container max-w-2xl">
+      <div className="min-h-screen bg-white py-4 px-4 sm:py-8">
+        <div className="container max-w-2xl mx-auto">
           <p className="text-center text-gray-500">Loading your food entries...</p>
         </div>
       </div>
@@ -119,22 +119,22 @@ const LoggedEntries = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white py-8">
-      <div className="container max-w-2xl">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-black">Logged Entries</h1>
-          <div className="flex gap-4">
+    <div className="min-h-screen bg-white py-4 px-4 sm:py-8">
+      <div className="container max-w-2xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-black">Logged Entries</h1>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <Button 
               onClick={() => navigate("/goal-settings")} 
               variant="outline"
-              className="border-black text-black hover:bg-black/10"
+              className="w-full sm:w-auto border-black text-black hover:bg-black/10"
             >
               Goal Settings
             </Button>
             <Button 
               onClick={() => navigate("/")} 
               variant="outline"
-              className="border-black text-black hover:bg-black/10"
+              className="w-full sm:w-auto border-black text-black hover:bg-black/10"
             >
               Add New Entry
             </Button>
@@ -151,7 +151,7 @@ const LoggedEntries = () => {
             value={sortBy}
             onValueChange={setSortBy}
           >
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-full sm:w-[200px]">
               <SelectValue placeholder="Sort by..." />
             </SelectTrigger>
             <SelectContent>
