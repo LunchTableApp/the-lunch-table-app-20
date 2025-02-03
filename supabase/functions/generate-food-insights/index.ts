@@ -1,8 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -15,16 +13,16 @@ serve(async (req) => {
   }
 
   try {
-    const { foodName } = await req.json();
-    
-    if (!foodName) {
-      console.error('Food name is missing');
-      throw new Error('Food name is required');
+    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openAIApiKey) {
+      console.error('OpenAI API key not found');
+      throw new Error('OpenAI API key not configured');
     }
 
-    if (!openAIApiKey) {
-      console.error('OpenAI API key is missing');
-      throw new Error('OpenAI API key is not configured');
+    const { foodName } = await req.json();
+    if (!foodName) {
+      console.error('No food name provided');
+      throw new Error('Food name is required');
     }
 
     console.log('Generating insights for food:', foodName);
@@ -40,46 +38,37 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are a professional nutritionist providing concise, evidence-based insights about foods. Focus on key health benefits, nutritional value, and interesting facts. Keep responses informative but brief (2-3 sentences max). Use bullet points for clarity.'
+            content: 'You are a helpful nutritionist providing brief, concise insights about foods. Keep responses under 100 words.'
           },
           {
             role: 'user',
-            content: `What are the key nutritional benefits and health impacts of ${foodName}? Please be specific and evidence-based.`
+            content: `Provide a brief nutritional insight about ${foodName}. Include 1-2 key health benefits and any notable considerations.`
           }
         ],
-        temperature: 0.7,
-        max_tokens: 150,
       }),
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('OpenAI API error response:', errorData);
-      throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
+      const error = await response.json();
+      console.error('OpenAI API error:', error);
+      throw new Error(`OpenAI API error: ${JSON.stringify(error)}`);
     }
 
     const data = await response.json();
-    console.log('OpenAI response received');
-
-    if (!data.choices?.[0]?.message?.content) {
-      console.error('Invalid OpenAI response format:', data);
-      throw new Error('Invalid response format from OpenAI');
-    }
-
     const insights = data.choices[0].message.content;
+    
+    console.log('Successfully generated insights:', insights);
 
     return new Response(
       JSON.stringify({ insights }),
       { 
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
     );
 
   } catch (error) {
     console.error('Error in generate-food-insights function:', error);
+    
     return new Response(
       JSON.stringify({ 
         error: 'Failed to generate food insights',
@@ -87,11 +76,8 @@ serve(async (req) => {
       }),
       { 
         status: 500,
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
     );
   }
 });
