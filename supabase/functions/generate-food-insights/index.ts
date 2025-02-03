@@ -22,7 +22,6 @@ serve(async (req) => {
       throw new Error('Food name is required');
     }
 
-    // Validate OpenAI API key
     if (!openAIApiKey) {
       console.error('OpenAI API key is missing');
       throw new Error('OpenAI API key is not configured');
