@@ -61,11 +61,6 @@ serve(async (req) => {
     const data = await openAIResponse.json();
     console.log('OpenAI response received:', data);
 
-    if (!data.choices?.[0]?.message?.content) {
-      console.error('Invalid OpenAI response format:', data);
-      throw new Error('Invalid response format from OpenAI');
-    }
-
     const insights = data.choices[0].message.content;
 
     return new Response(
