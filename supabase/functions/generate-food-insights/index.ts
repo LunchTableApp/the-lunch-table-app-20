@@ -22,9 +22,10 @@ serve(async (req) => {
       throw new Error('Food name is required');
     }
 
-    if (!openAIApiKey || !openAIApiKey.startsWith('sk-')) {
-      console.error('Invalid OpenAI API key format');
-      throw new Error('Invalid OpenAI API key configuration');
+    // Validate OpenAI API key
+    if (!openAIApiKey) {
+      console.error('OpenAI API key is missing');
+      throw new Error('OpenAI API key is not configured');
     }
 
     console.log('Generating insights for food:', foodName);
@@ -36,7 +37,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-3.5-turbo',
         messages: [
           {
             role: 'system',
