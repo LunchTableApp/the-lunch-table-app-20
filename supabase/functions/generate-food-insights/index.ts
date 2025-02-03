@@ -22,9 +22,9 @@ serve(async (req) => {
       throw new Error('Food name is required');
     }
 
-    if (!openAIApiKey) {
-      console.error('OpenAI API key is missing');
-      throw new Error('OpenAI API key is not configured');
+    if (!openAIApiKey || !openAIApiKey.startsWith('sk-')) {
+      console.error('Invalid OpenAI API key format');
+      throw new Error('Invalid OpenAI API key configuration');
     }
 
     console.log('Generating insights for food:', foodName);
@@ -54,12 +54,17 @@ serve(async (req) => {
 
     if (!openAIResponse.ok) {
       const errorData = await openAIResponse.json();
-      console.error('OpenAI API error:', errorData);
+      console.error('OpenAI API error response:', errorData);
       throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
     }
 
     const data = await openAIResponse.json();
     console.log('OpenAI response received:', data);
+
+    if (!data.choices?.[0]?.message?.content) {
+      console.error('Invalid OpenAI response format:', data);
+      throw new Error('Invalid response format from OpenAI');
+    }
 
     const insights = data.choices[0].message.content;
 
