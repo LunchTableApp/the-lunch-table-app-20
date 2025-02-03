@@ -45,6 +45,8 @@ serve(async (req) => {
             content: `Provide a brief nutritional insight about ${foodName}. Include 1-2 key health benefits and any notable considerations.`
           }
         ],
+        temperature: 0.7,
+        max_tokens: 150,
       }),
     });
 
