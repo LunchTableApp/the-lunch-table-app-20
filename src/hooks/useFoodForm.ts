@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 export const useFoodForm = (onSubmit: (name: string, tasteRating: number, satisfactionRating: number, fullnessRating: number, notes: string, isNewFood: boolean) => void) => {
   const [name, setName] = useState("");
@@ -13,29 +12,7 @@ export const useFoodForm = (onSubmit: (name: string, tasteRating: number, satisf
   const [hoveredSatisfactionRating, setHoveredSatisfactionRating] = useState(0);
   const [hoveredFullnessRating, setHoveredFullnessRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showInsights, setShowInsights] = useState(false);
-  const [insights, setInsights] = useState("");
   const { toast } = useToast();
-
-  const getFoodInsights = async (foodName: string) => {
-    try {
-      console.log('Fetching insights for:', foodName);
-      const { data, error } = await supabase.functions.invoke('generate-food-insights', {
-        body: { foodName }
-      });
-
-      if (error) {
-        console.error('Error from edge function:', error);
-        throw error;
-      }
-      
-      console.log('Received insights:', data);
-      return data.insights;
-    } catch (error) {
-      console.error('Error fetching food insights:', error);
-      return null;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,12 +40,6 @@ export const useFoodForm = (onSubmit: (name: string, tasteRating: number, satisf
 
     onSubmit(name, tasteRating, satisfactionRating, fullnessRating, notes, isNewFood);
     
-    const foodInsights = await getFoodInsights(name);
-    if (foodInsights) {
-      setInsights(foodInsights);
-      setShowInsights(true);
-    }
-
     setName("");
     setTasteRating(0);
     setSatisfactionRating(0);
@@ -103,9 +74,6 @@ export const useFoodForm = (onSubmit: (name: string, tasteRating: number, satisf
     hoveredFullnessRating,
     setHoveredFullnessRating,
     isSubmitting,
-    showInsights,
-    setShowInsights,
-    insights,
     handleSubmit
   };
 };
