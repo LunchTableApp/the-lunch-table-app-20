@@ -1,9 +1,11 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { ProfileMenu } from "./components/ProfileMenu";
 import Index from "./pages/Index";
 import FoodDetails from "./pages/FoodDetails";
 import LoggedEntries from "./pages/LoggedEntries";
@@ -29,47 +31,61 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/auth" element={<AuthPage />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/food-details"
-              element={
-                <ProtectedRoute>
-                  <FoodDetails />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/logged-entries"
-              element={
-                <ProtectedRoute>
-                  <LoggedEntries />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/goal-settings"
-              element={
-                <ProtectedRoute>
-                  <GoalSettings />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/auth" element={<AuthPage />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <>
+                      <ProfileMenu />
+                      <Index />
+                    </>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/food-details"
+                element={
+                  <ProtectedRoute>
+                    <>
+                      <ProfileMenu />
+                      <FoodDetails />
+                    </>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/logged-entries"
+                element={
+                  <ProtectedRoute>
+                    <>
+                      <ProfileMenu />
+                      <LoggedEntries />
+                    </>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/goal-settings"
+                element={
+                  <ProtectedRoute>
+                    <>
+                      <ProfileMenu />
+                      <GoalSettings />
+                    </>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
