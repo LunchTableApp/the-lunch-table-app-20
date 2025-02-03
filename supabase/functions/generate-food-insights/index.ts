@@ -22,24 +22,16 @@ serve(async (req) => {
       throw new Error('Food name is required');
     }
 
-    // Log the API key format (safely)
-    console.log('API key starts with:', openAIApiKey?.substring(0, 5));
-    
-    if (!openAIApiKey || !openAIApiKey.startsWith('sk-')) {
-      console.error('Invalid OpenAI API key format');
-      throw new Error('Invalid OpenAI API key configuration');
-    }
-
     console.log('Generating insights for food:', foodName);
 
-    const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4-mini',
         messages: [
           {
             role: 'system',
@@ -55,14 +47,14 @@ serve(async (req) => {
       }),
     });
 
-    if (!openAIResponse.ok) {
-      const errorData = await openAIResponse.json();
+    if (!response.ok) {
+      const errorData = await response.json();
       console.error('OpenAI API error response:', errorData);
       throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
     }
 
-    const data = await openAIResponse.json();
-    console.log('OpenAI response received:', data);
+    const data = await response.json();
+    console.log('OpenAI response received');
 
     if (!data.choices?.[0]?.message?.content) {
       console.error('Invalid OpenAI response format:', data);
