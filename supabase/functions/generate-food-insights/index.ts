@@ -36,19 +36,19 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content: 'You are a nutritionist providing brief, helpful insights about foods. Focus on key health benefits and nutritional value. Keep responses under 100 words.'
+            content: 'You are a professional nutritionist providing concise, evidence-based insights about foods. Focus on key health benefits, nutritional value, and interesting facts. Keep responses informative but brief (2-3 sentences max). Use bullet points for clarity.'
           },
           {
             role: 'user',
-            content: `What are the key health benefits and nutritional insights about ${foodName}?`
+            content: `What are the key nutritional benefits and health impacts of ${foodName}? Please be specific and evidence-based.`
           }
         ],
-        max_tokens: 150,
         temperature: 0.7,
+        max_tokens: 150,
       }),
     });
 
