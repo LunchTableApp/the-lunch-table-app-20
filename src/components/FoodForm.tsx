@@ -1,21 +1,13 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RatingSection } from "./food/RatingSection";
 import { NotesSection } from "./food/NotesSection";
 import { FoodNameInput } from "./food/FoodNameInput";
 import { FormHeader } from "./food/FormHeader";
+import { InsightsDialog } from "./food/InsightsDialog";
+import { SubmitButton } from "./food/SubmitButton";
 import { supabase } from "@/integrations/supabase/client";
 import type { FoodFormProps } from "@/types/food";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
 
 export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   const [name, setName] = useState("");
@@ -76,17 +68,14 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
       return;
     }
 
-    // Submit the food entry
     onSubmit(name, tasteRating, satisfactionRating, fullnessRating, notes, isNewFood);
     
-    // Get and display food insights
     const foodInsights = await getFoodInsights(name);
     if (foodInsights) {
       setInsights(foodInsights);
       setShowInsights(true);
     }
 
-    // Reset form
     setName("");
     setTasteRating(0);
     setSatisfactionRating(0);
@@ -132,34 +121,15 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
         />
 
         <NotesSection notes={notes} setNotes={setNotes} />
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Plus size={20} />
-          {isSubmitting ? "Adding..." : "Add Food Entry"}
-        </button>
+        <SubmitButton isSubmitting={isSubmitting} />
       </form>
 
-      <AlertDialog open={showInsights} onOpenChange={setShowInsights}>
-        <AlertDialogContent className="max-w-[500px]">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-semibold text-primary">
-              Food Benefits: {name}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-base whitespace-pre-line">
-              {insights}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction className="bg-primary text-white hover:bg-primary/90">
-              Got it!
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <InsightsDialog
+        showInsights={showInsights}
+        setShowInsights={setShowInsights}
+        foodName={name}
+        insights={insights}
+      />
     </>
   );
 };
