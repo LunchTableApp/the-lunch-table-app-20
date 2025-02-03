@@ -22,6 +22,11 @@ serve(async (req) => {
       throw new Error('Food name is required');
     }
 
+    if (!openAIApiKey || !openAIApiKey.startsWith('sk-')) {
+      console.error('Invalid OpenAI API key format');
+      throw new Error('Invalid OpenAI API key configuration');
+    }
+
     console.log('Generating insights for food:', foodName);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -31,7 +36,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4-mini',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
