@@ -1,1 +1,3 @@
 project_id = "srtyrjtvavpfgtznhgya"
+[functions.generate-food-insights]
+verify_jwt = false

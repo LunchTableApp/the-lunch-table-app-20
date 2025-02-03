@@ -5,6 +5,7 @@ import { RatingSection } from "./food/RatingSection";
 import { NotesSection } from "./food/NotesSection";
 import { FoodNameInput } from "./food/FoodNameInput";
 import { FormHeader } from "./food/FormHeader";
+import { supabase } from "@/integrations/supabase/client";
 import type { FoodFormProps } from "@/types/food";
 
 export const FoodForm = ({ onSubmit }: FoodFormProps) => {
@@ -17,33 +18,67 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   const [hoveredTasteRating, setHoveredTasteRating] = useState(0);
   const [hoveredSatisfactionRating, setHoveredSatisfactionRating] = useState(0);
   const [hoveredFullnessRating, setHoveredFullnessRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const getFoodInsights = async (foodName: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-food-insights', {
+        body: { foodName }
+      });
+
+      if (error) throw error;
+      return data.insights;
+    } catch (error) {
+      console.error('Error fetching food insights:', error);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     if (!name.trim()) {
       toast({
         title: "Error",
         description: "Please enter a food name",
         variant: "destructive",
       });
+      setIsSubmitting(false);
       return;
     }
+
     if (tasteRating === 0 || satisfactionRating === 0 || fullnessRating === 0) {
       toast({
         title: "Error",
         description: "Please rate taste, satisfaction, and fullness",
         variant: "destructive",
       });
+      setIsSubmitting(false);
       return;
     }
+
     onSubmit(name, tasteRating, satisfactionRating, fullnessRating, notes, isNewFood);
+    
+    // Get and display food insights
+    const insights = await getFoodInsights(name);
+    if (insights) {
+      toast({
+        title: `About ${name}`,
+        description: insights,
+        duration: 6000,
+      });
+    }
+
     setName("");
     setTasteRating(0);
     setSatisfactionRating(0);
     setFullnessRating(0);
     setNotes("");
     setIsNewFood(false);
+    setIsSubmitting(false);
+    
     toast({
       title: "Success",
       description: "Food entry added successfully!",
@@ -83,10 +118,11 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
 
       <button
         type="submit"
-        className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+        disabled={isSubmitting}
+        className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Plus size={20} />
-        Add Food Entry
+        {isSubmitting ? "Adding..." : "Add Food Entry"}
       </button>
     </form>
   );
