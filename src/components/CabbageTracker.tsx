@@ -14,7 +14,7 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8 animate-fadeIn">
-      <h2 className="text-xl font-semibold mb-4">New Foods Progress</h2>
+      <h2 className="text-xl font-semibold mb-4 text-black dark:text-black">New Foods Progress</h2>
       <div className="flex justify-center mb-4">
         <div className="relative w-64 h-64 flex items-center justify-center">
           {/* Background circle */}
