@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { User, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
+import { User, Settings, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -24,6 +24,20 @@ export function ProfileMenu() {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [theme, setTheme] = useState<"light" | "dark">(
+    localStorage.getItem("theme") as "light" | "dark" || "light"
+  );
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   const handleUpdateProfile = async () => {
     try {
@@ -102,6 +116,19 @@ export function ProfileMenu() {
               </div>
             </DialogContent>
           </Dialog>
+          <DropdownMenuItem onSelect={toggleTheme}>
+            {theme === "light" ? (
+              <>
+                <Moon className="mr-2 h-4 w-4" />
+                Dark Mode
+              </>
+            ) : (
+              <>
+                <Sun className="mr-2 h-4 w-4" />
+                Light Mode
+              </>
+            )}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
