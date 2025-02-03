@@ -34,15 +34,15 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful nutritionist providing brief, concise insights about foods. Keep responses under 100 words.'
+            content: 'You are a helpful nutritionist providing brief, concise insights about foods. Focus on key nutritional benefits and considerations. Keep responses under 100 words.'
           },
           {
             role: 'user',
-            content: `Provide a brief nutritional insight about ${foodName}. Include 1-2 key health benefits and any notable considerations.`
+            content: `What are the key nutritional benefits and considerations for ${foodName}? Please provide a brief, focused response.`
           }
         ],
       }),
