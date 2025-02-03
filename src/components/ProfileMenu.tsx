@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { User, Settings, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { User, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,7 +20,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export function ProfileMenu() {
-  const { setTheme, theme } = useTheme();
   const { toast } = useToast();
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
@@ -104,19 +102,6 @@ export function ProfileMenu() {
               </div>
             </DialogContent>
           </Dialog>
-          <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-            {theme === "dark" ? (
-              <>
-                <Sun className="mr-2 h-4 w-4" />
-                Light Mode
-              </>
-            ) : (
-              <>
-                <Moon className="mr-2 h-4 w-4" />
-                Dark Mode
-              </>
-            )}
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
