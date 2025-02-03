@@ -22,6 +22,9 @@ serve(async (req) => {
       throw new Error('Food name is required');
     }
 
+    // Log the API key format (safely)
+    console.log('API key starts with:', openAIApiKey?.substring(0, 5));
+    
     if (!openAIApiKey || !openAIApiKey.startsWith('sk-')) {
       console.error('Invalid OpenAI API key format');
       throw new Error('Invalid OpenAI API key configuration');
