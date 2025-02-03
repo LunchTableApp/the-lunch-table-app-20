@@ -119,22 +119,22 @@ const LoggedEntries = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white py-4 px-4 sm:py-8">
+    <div className="min-h-screen bg-white dark:bg-background py-4 px-4 sm:py-8">
       <div className="container max-w-2xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Logged Entries</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white">Logged Entries</h1>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <Button 
               onClick={() => navigate("/goal-settings")} 
               variant="outline"
-              className="w-full sm:w-auto border-black text-black hover:bg-black/10"
+              className="w-full sm:w-auto border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10"
             >
               Goal Settings
             </Button>
             <Button 
               onClick={() => navigate("/")} 
               variant="outline"
-              className="w-full sm:w-auto border-black text-black hover:bg-black/10"
+              className="w-full sm:w-auto border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10"
             >
               Add New Entry
             </Button>
