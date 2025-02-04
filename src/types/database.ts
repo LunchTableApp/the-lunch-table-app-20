@@ -9,4 +9,5 @@ export interface DbFoodEntry {
   date: string;
   is_new_food: boolean;
   created_at: string;
+  categories: string[];
 }

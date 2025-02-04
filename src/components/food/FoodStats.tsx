@@ -43,6 +43,15 @@ export const FoodStats = ({ foods }: FoodStatsProps) => {
     { name: 'Fullness', value: averageRatings.fullness },
   ];
 
+  const chartConfig = {
+    data: {
+      theme: {
+        light: "#f97316",
+        dark: "#f97316"
+      }
+    }
+  };
+
   return (
     <div className="space-y-4 mb-6">
       <div className="grid gap-4 md:grid-cols-3">
@@ -67,7 +76,7 @@ export const FoodStats = ({ foods }: FoodStatsProps) => {
             <CardTitle className="text-sm font-medium">Average Ratings</CardTitle>
           </CardHeader>
           <CardContent className="pt-2">
-            <ChartContainer className="h-[120px]">
+            <ChartContainer className="h-[120px]" config={chartConfig}>
               <BarChart data={chartData}>
                 <XAxis dataKey="name" fontSize={12} />
                 <YAxis domain={[0, 5]} fontSize={12} />
@@ -85,7 +94,7 @@ export const FoodStats = ({ foods }: FoodStatsProps) => {
             <CardTitle className="text-lg">Ratings Over Time</CardTitle>
           </CardHeader>
           <CardContent>
-            <ChartContainer className="h-[200px]">
+            <ChartContainer className="h-[200px]" config={chartConfig}>
               <LineChart data={timelineData}>
                 <XAxis dataKey="date" fontSize={12} />
                 <YAxis domain={[0, 5]} fontSize={12} />

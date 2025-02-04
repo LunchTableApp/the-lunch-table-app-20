@@ -11,7 +11,7 @@ interface FoodEntryProps {
   fullnessRating: number;
   date: Date;
   notes: string;
-  categories: string[];
+  categories?: string[];
   onDelete: (id: string) => void;
   selected?: boolean;
   onSelect?: (id: string) => void;
