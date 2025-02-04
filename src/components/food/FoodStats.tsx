@@ -54,43 +54,6 @@ export const FoodStats = ({ foods }: FoodStatsProps) => {
 
   return (
     <div className="space-y-4 mb-6">
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Ratings Over Time</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer className="h-[200px]" config={chartConfig}>
-              <LineChart data={timelineData}>
-                <XAxis dataKey="date" fontSize={12} />
-                <YAxis domain={[0, 5]} fontSize={12} />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="taste" stroke="#f97316" />
-                <Line type="monotone" dataKey="satisfaction" stroke="#22c55e" />
-                <Line type="monotone" dataKey="fullness" stroke="#3b82f6" />
-              </LineChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Popular Categories</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {categoryStats.map(({ name, count }) => (
-                <CategoryBadge
-                  key={name}
-                  category={`${name} (${count})`}
-                  className="text-xs"
-                />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 };
