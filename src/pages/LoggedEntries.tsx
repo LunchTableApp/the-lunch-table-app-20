@@ -11,12 +11,23 @@ import type { DbFoodEntry } from "@/types/database";
 import { useAuth } from "@/contexts/AuthContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DateRangeFilter } from "@/components/food/DateRangeFilter";
 import { FoodStats } from "@/components/food/FoodStats";
 import { ExportButton } from "@/components/food/ExportButton";
 import { filterEntriesByDateRange } from "@/utils/dateFilters";
+import { CategoryInput } from "@/components/food/CategoryInput";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const LoggedEntries = () => {
   const navigate = useNavigate();
@@ -26,6 +37,8 @@ const LoggedEntries = () => {
   const [sortBy, setSortBy] = useState<string>("recent");
   const [searchQuery, setSearchQuery] = useState("");
   const [timeFilter, setTimeFilter] = useState("all");
+  const [selectedEntries, setSelectedEntries] = useState<string[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const { data: foods = [], isLoading } = useQuery({
     queryKey: ['foods', user?.id],
@@ -46,18 +59,19 @@ const LoggedEntries = () => {
         fullnessRating: entry.fullness_rating,
         notes: entry.notes,
         date: new Date(entry.date),
-        isNewFood: entry.is_new_food
+        isNewFood: entry.is_new_food,
+        categories: entry.categories || []
       }));
     },
     enabled: !!user
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (ids: string[]) => {
       const { error } = await supabase
         .from('food_entries')
         .delete()
-        .eq('id', id)
+        .in('id', ids)
         .eq('user_id', user?.id);
       
       if (error) throw error;
@@ -65,24 +79,45 @@ const LoggedEntries = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['foods'] });
       toast({
-        title: "Food deleted",
-        description: "Your food entry has been deleted successfully!",
+        title: "Entries deleted",
+        description: "Selected entries have been deleted successfully!",
       });
+      setSelectedEntries([]);
     },
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to delete food entry. Please try again.",
+        description: "Failed to delete entries. Please try again.",
         variant: "destructive",
       });
       console.error('Delete error:', error);
     }
   });
 
+  const handleBulkDelete = () => {
+    if (selectedEntries.length > 0) {
+      setShowDeleteDialog(true);
+    }
+  };
+
+  const confirmBulkDelete = () => {
+    deleteMutation.mutate(selectedEntries);
+    setShowDeleteDialog(false);
+  };
+
+  const toggleEntrySelection = (id: string) => {
+    setSelectedEntries(prev =>
+      prev.includes(id)
+        ? prev.filter(entryId => entryId !== id)
+        : [...prev, id]
+    );
+  };
+
   const filteredAndSortedFoods = (foods || [])
     .filter(food => 
       food.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      food.notes?.toLowerCase().includes(searchQuery.toLowerCase())
+      food.notes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      food.categories?.some(cat => cat.toLowerCase().includes(searchQuery.toLowerCase()))
     )
     .filter(food => filterEntriesByDateRange([food], timeFilter).length > 0)
     .sort((a, b) => {
@@ -193,12 +228,31 @@ const LoggedEntries = () => {
           <ExportButton foods={filteredAndSortedFoods} />
         </div>
 
+        {selectedEntries.length > 0 && (
+          <div className="flex justify-between items-center mb-4 p-2 bg-muted rounded-lg">
+            <span className="text-sm font-medium">
+              {selectedEntries.length} {selectedEntries.length === 1 ? 'entry' : 'entries'} selected
+            </span>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleBulkDelete}
+              className="gap-2"
+            >
+              <Trash2 size={16} />
+              Delete Selected
+            </Button>
+          </div>
+        )}
+
         <div className="space-y-4">
           {filteredAndSortedFoods.map((food) => (
             <FoodEntry
               key={food.id}
               {...food}
-              onDelete={() => deleteMutation.mutate(food.id)}
+              onDelete={(id) => deleteMutation.mutate([id])}
+              selected={selectedEntries.includes(food.id)}
+              onSelect={toggleEntrySelection}
             />
           ))}
           {foods.length === 0 ? (
@@ -229,6 +283,23 @@ const LoggedEntries = () => {
             </p>
           ) : null}
         </div>
+
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the selected entries.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmBulkDelete}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

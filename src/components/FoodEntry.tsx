@@ -1,5 +1,7 @@
-import { Carrot, Trash } from "lucide-react";
+import { Carrot, Trash, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CategoryBadge } from "./food/CategoryBadge";
+import { Checkbox } from "./ui/checkbox";
 
 interface FoodEntryProps {
   id: string;
@@ -9,7 +11,10 @@ interface FoodEntryProps {
   fullnessRating: number;
   date: Date;
   notes: string;
+  categories: string[];
   onDelete: (id: string) => void;
+  selected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
 export const FoodEntry = ({ 
@@ -19,8 +24,11 @@ export const FoodEntry = ({
   satisfactionRating,
   fullnessRating, 
   date, 
-  notes, 
-  onDelete 
+  notes,
+  categories = [],
+  onDelete,
+  selected,
+  onSelect
 }: FoodEntryProps) => {
   const averageRating = ((tasteRating + satisfactionRating + fullnessRating) / 3).toFixed(1);
   
@@ -52,23 +60,44 @@ export const FoodEntry = ({
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-green-400">
+    <div className={cn(
+      "bg-white rounded-lg shadow-md p-3 sm:p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-green-400",
+      selected && "ring-2 ring-primary"
+    )}>
       <div className="flex justify-between items-start gap-2">
-        <div>
-          <h3 className="font-semibold text-base sm:text-lg text-gray-800 hover:text-green-600 transition-colors">{name}</h3>
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs sm:text-sm text-black">
-              {date.toLocaleDateString()}
-            </p>
-            <span className={cn("text-xs sm:text-sm px-2 py-0.5 rounded-full", getAverageColor(parseFloat(averageRating)))}>
-              Avg: {averageRating}★
-            </span>
-          </div>
-          {notes && (
-            <p className="mt-2 text-xs sm:text-sm text-gray-600">
-              {notes}
-            </p>
+        <div className="flex items-start gap-3">
+          {onSelect && (
+            <Checkbox
+              checked={selected}
+              onCheckedChange={() => onSelect(id)}
+              className="mt-1"
+            />
           )}
+          <div>
+            <h3 className="font-semibold text-base sm:text-lg text-gray-800 hover:text-green-600 transition-colors">
+              {name}
+            </h3>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-xs sm:text-sm text-black">
+                {date.toLocaleDateString()}
+              </p>
+              <span className={cn("text-xs sm:text-sm px-2 py-0.5 rounded-full", getAverageColor(parseFloat(averageRating)))}>
+                Avg: {averageRating}★
+              </span>
+            </div>
+            {categories.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {categories.map((category) => (
+                  <CategoryBadge key={category} category={category} />
+                ))}
+              </div>
+            )}
+            {notes && (
+              <p className="mt-2 text-xs sm:text-sm text-gray-600">
+                {notes}
+              </p>
+            )}
+          </div>
         </div>
         <button
           onClick={() => onDelete(id)}

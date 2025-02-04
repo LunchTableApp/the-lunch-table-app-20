@@ -7,6 +7,7 @@ export interface FoodItem {
   notes: string;
   date: Date;
   isNewFood?: boolean;
+  categories?: string[];
 }
 
 export interface FoodFormProps {
