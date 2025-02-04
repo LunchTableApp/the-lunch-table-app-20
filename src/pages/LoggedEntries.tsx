@@ -16,6 +16,7 @@ import { SortSelect } from "@/components/food/SortSelect";
 import { BulkActionBar } from "@/components/food/BulkActionBar";
 import { EmptyState } from "@/components/food/EmptyState";
 import { HeaderActions } from "@/components/food/HeaderActions";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
   AlertDialogAction,
