@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UpdateProfileDialog } from "./profile/UpdateProfileDialog";
+import { SupportResourcesDialog } from "./profile/SupportResourcesDialog";
 import { ThemeToggle } from "./profile/ThemeToggle";
 
 export function ProfileMenu() {
@@ -35,6 +36,7 @@ export function ProfileMenu() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <UpdateProfileDialog />
+          <SupportResourcesDialog />
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
         </DropdownMenuContent>
       </DropdownMenu>
