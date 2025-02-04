@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       food_entries: {
         Row: {
+          categories: string[] | null
           created_at: string | null
           date: string | null
           fullness_rating: number
@@ -23,6 +24,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          categories?: string[] | null
           created_at?: string | null
           date?: string | null
           fullness_rating: number
@@ -35,6 +37,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          categories?: string[] | null
           created_at?: string | null
           date?: string | null
           fullness_rating?: number

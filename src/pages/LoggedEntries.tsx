@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FoodEntry } from "@/components/FoodEntry";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -9,16 +9,14 @@ import { supabase } from "@/integrations/supabase/client";
 import type { FoodItem } from "@/types/food";
 import type { DbFoodEntry } from "@/types/database";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Search, Calendar } from "lucide-react";
+import { Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DateRangeFilter } from "@/components/food/DateRangeFilter";
+import { FoodStats } from "@/components/food/FoodStats";
+import { ExportButton } from "@/components/food/ExportButton";
+import { filterEntriesByDateRange } from "@/utils/dateFilters";
 
 const LoggedEntries = () => {
   const navigate = useNavigate();
@@ -81,32 +79,12 @@ const LoggedEntries = () => {
     }
   });
 
-  const filterEntriesByTime = (entries: FoodItem[]) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const thisWeekStart = new Date(today);
-    thisWeekStart.setDate(thisWeekStart.getDate() - today.getDay());
-
-    switch (timeFilter) {
-      case "today":
-        return entries.filter(entry => entry.date >= today);
-      case "yesterday":
-        return entries.filter(entry => entry.date >= yesterday && entry.date < today);
-      case "thisWeek":
-        return entries.filter(entry => entry.date >= thisWeekStart);
-      default:
-        return entries;
-    }
-  };
-
   const filteredAndSortedFoods = (foods || [])
     .filter(food => 
       food.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       food.notes?.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter(food => filterEntriesByTime([food]).length > 0)
+    .filter(food => filterEntriesByDateRange([food], timeFilter).length > 0)
     .sort((a, b) => {
       switch (sortBy) {
         case "recent":
@@ -160,20 +138,22 @@ const LoggedEntries = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-background py-4 px-4 sm:py-8">
       <div className="container max-w-2xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white">Logged Entries</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white">
+            Logged Entries
+          </h1>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <Button 
               onClick={() => navigate("/goal-settings")} 
               variant="outline"
-              className="w-full sm:w-auto border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10"
+              className="w-full sm:w-auto"
             >
               Goal Settings
             </Button>
             <Button 
               onClick={() => navigate("/")} 
               variant="outline"
-              className="w-full sm:w-auto border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10"
+              className="w-full sm:w-auto"
             >
               Add New Entry
             </Button>
@@ -185,6 +165,8 @@ const LoggedEntries = () => {
           monthlyGoal={monthlyGoal}
         />
 
+        <FoodStats foods={filteredAndSortedFoods} />
+
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -195,18 +177,7 @@ const LoggedEntries = () => {
               className="pl-10"
             />
           </div>
-          <Select value={timeFilter} onValueChange={setTimeFilter}>
-            <SelectTrigger className="w-full sm:w-[150px]">
-              <Calendar className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Time period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All time</SelectItem>
-              <SelectItem value="today">Today</SelectItem>
-              <SelectItem value="yesterday">Yesterday</SelectItem>
-              <SelectItem value="thisWeek">This week</SelectItem>
-            </SelectContent>
-          </Select>
+          <DateRangeFilter value={timeFilter} onChange={setTimeFilter} />
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-full sm:w-[150px]">
               <SelectValue placeholder="Sort by..." />
@@ -219,6 +190,7 @@ const LoggedEntries = () => {
               <SelectItem value="fullness">Fullness</SelectItem>
             </SelectContent>
           </Select>
+          <ExportButton foods={filteredAndSortedFoods} />
         </div>
 
         <div className="space-y-4">
