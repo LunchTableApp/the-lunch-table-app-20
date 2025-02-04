@@ -23,10 +23,12 @@ export function ProfileMenu() {
   const { data: profile } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
+      if (!user?.id) return null;
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('avatar_url')
-        .eq('id', user?.id)
+        .eq('id', user.id)
         .single();
       
       if (error) {
@@ -35,7 +37,7 @@ export function ProfileMenu() {
       }
       return data;
     },
-    enabled: !!user,
+    enabled: !!user?.id,
   });
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export function ProfileMenu() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full">
             <Avatar>
-              <AvatarImage src={profile?.avatar_url} />
+              <AvatarImage src={profile?.avatar_url || undefined} />
               <AvatarFallback>
                 <User className="h-5 w-5" />
               </AvatarFallback>
