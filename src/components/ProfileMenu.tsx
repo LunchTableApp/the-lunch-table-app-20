@@ -9,11 +9,29 @@ import {
 import { UpdateProfileDialog } from "./profile/UpdateProfileDialog";
 import { SupportResourcesDialog } from "./profile/SupportResourcesDialog";
 import { ThemeToggle } from "./profile/ThemeToggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export function ProfileMenu() {
+  const { user } = useAuth();
   const [theme, setTheme] = useState<"light" | "dark">(
     localStorage.getItem("theme") as "light" | "dark" || "light"
   );
+
+  const { data: profile } = useQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .eq('id', user?.id)
+        .single();
+      return data;
+    },
+    enabled: !!user,
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -30,8 +48,13 @@ export function ProfileMenu() {
     <div className="fixed top-4 right-4">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <User className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full">
+            <Avatar>
+              <AvatarImage src={profile?.avatar_url} />
+              <AvatarFallback>
+                <User className="h-5 w-5" />
+              </AvatarFallback>
+            </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
