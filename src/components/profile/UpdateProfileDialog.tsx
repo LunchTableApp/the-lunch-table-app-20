@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Settings, Upload } from "lucide-react";
+import { Settings, Upload, User } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User } from "lucide-react";
 
 export const UpdateProfileDialog = () => {
   const { toast } = useToast();
