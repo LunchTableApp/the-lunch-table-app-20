@@ -1,23 +1,21 @@
 import { useState } from "react";
 import { FoodEntry } from "@/components/FoodEntry";
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
 import { CabbageTracker } from "@/components/CabbageTracker";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { FoodItem } from "@/types/food";
 import type { DbFoodEntry } from "@/types/database";
 import { useAuth } from "@/contexts/AuthContext";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Search, Trash2 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { DateRangeFilter } from "@/components/food/DateRangeFilter";
 import { FoodStats } from "@/components/food/FoodStats";
 import { ExportButton } from "@/components/food/ExportButton";
 import { filterEntriesByDateRange } from "@/utils/dateFilters";
-import { CategoryInput } from "@/components/food/CategoryInput";
+import { SearchBar } from "@/components/food/SearchBar";
+import { SortSelect } from "@/components/food/SortSelect";
+import { BulkActionBar } from "@/components/food/BulkActionBar";
+import { EmptyState } from "@/components/food/EmptyState";
+import { HeaderActions } from "@/components/food/HeaderActions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +28,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const LoggedEntries = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -177,22 +174,7 @@ const LoggedEntries = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white">
             Logged Entries
           </h1>
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
-            <Button 
-              onClick={() => navigate("/goal-settings")} 
-              variant="outline"
-              className="w-full sm:w-auto"
-            >
-              Goal Settings
-            </Button>
-            <Button 
-              onClick={() => navigate("/")} 
-              variant="outline"
-              className="w-full sm:w-auto"
-            >
-              Add New Entry
-            </Button>
-          </div>
+          <HeaderActions />
         </div>
 
         <CabbageTracker 
@@ -203,46 +185,17 @@ const LoggedEntries = () => {
         <FoodStats foods={filteredAndSortedFoods} />
 
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <Input
-              placeholder="Search entries..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <DateRangeFilter value={timeFilter} onChange={setTimeFilter} />
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-full sm:w-[150px]">
-              <SelectValue placeholder="Sort by..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recent">Most Recent</SelectItem>
-              <SelectItem value="rating">Highest Rated</SelectItem>
-              <SelectItem value="taste">Taste</SelectItem>
-              <SelectItem value="satisfaction">Satisfaction</SelectItem>
-              <SelectItem value="fullness">Fullness</SelectItem>
-            </SelectContent>
-          </Select>
+          <SortSelect value={sortBy} onValueChange={setSortBy} />
           <ExportButton foods={filteredAndSortedFoods} />
         </div>
 
         {selectedEntries.length > 0 && (
-          <div className="flex justify-between items-center mb-4 p-2 bg-muted rounded-lg">
-            <span className="text-sm font-medium">
-              {selectedEntries.length} {selectedEntries.length === 1 ? 'entry' : 'entries'} selected
-            </span>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleBulkDelete}
-              className="gap-2"
-            >
-              <Trash2 size={16} />
-              Delete Selected
-            </Button>
-          </div>
+          <BulkActionBar
+            selectedCount={selectedEntries.length}
+            onDelete={handleBulkDelete}
+          />
         )}
 
         <div className="space-y-4">
@@ -256,27 +209,7 @@ const LoggedEntries = () => {
             />
           ))}
           {foods.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="mb-4">
-                <img 
-                  src="/eaten-carrot-logo.svg" 
-                  alt="No entries" 
-                  className="w-24 h-24 mx-auto opacity-50"
-                />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                No food entries yet
-              </h3>
-              <p className="text-gray-500 mb-4">
-                Start tracking your food journey by adding your first entry
-              </p>
-              <Button 
-                onClick={() => navigate("/")}
-                className="bg-primary hover:bg-primary/90"
-              >
-                Add Your First Entry
-              </Button>
-            </div>
+            <EmptyState />
           ) : filteredAndSortedFoods.length === 0 ? (
             <p className="text-center text-gray-500 py-8">
               No entries match your search criteria
