@@ -13,6 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type Profile = Database['public']['Tables']['profiles']['Row'];
 
 export function ProfileMenu() {
   const { user } = useAuth();
@@ -20,14 +23,14 @@ export function ProfileMenu() {
     localStorage.getItem("theme") as "light" | "dark" || "light"
   );
 
-  const { data: profile } = useQuery({
+  const { data: profile } = useQuery<Profile | null>({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
       
       const { data, error } = await supabase
         .from('profiles')
-        .select('avatar_url')
+        .select('*')
         .eq('id', user.id)
         .single();
       
