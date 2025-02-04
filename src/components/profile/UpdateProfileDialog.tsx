@@ -68,7 +68,7 @@ export const UpdateProfileDialog = () => {
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="support">Outside Support</TabsTrigger>
+            <TabsTrigger value="support">Support Resources</TabsTrigger>
           </TabsList>
           <TabsContent value="profile">
             <div className="space-y-4">
@@ -96,21 +96,58 @@ export const UpdateProfileDialog = () => {
             </div>
           </TabsContent>
           <TabsContent value="support">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <h3 className="font-medium">Need Help?</h3>
-                <p className="text-sm text-muted-foreground">
-                  If you need support or have questions about using Lunch Table, please reach out to our support team:
-                </p>
-                <div className="space-y-2 mt-4">
-                  <p className="text-sm">
-                    Email: support@lunchtable.com
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <h3 className="font-medium text-lg">24/7 Crisis Support</h3>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">988 Suicide & Crisis Lifeline</p>
+                  <p className="text-sm text-muted-foreground">
+                    Call or text 988 - Free, confidential support available 24/7
                   </p>
-                  <p className="text-sm">
-                    Hours: Monday - Friday, 9am - 5pm EST
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Crisis Text Line</p>
+                  <p className="text-sm text-muted-foreground">
+                    Text HOME to 741741 - Free crisis counseling 24/7
                   </p>
                 </div>
               </div>
+
+              <div className="space-y-3">
+                <h3 className="font-medium text-lg">Teen-Specific Support</h3>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Teen Line</p>
+                  <p className="text-sm text-muted-foreground">
+                    Call 310-855-HOPE or Text "TEEN" to 839863
+                    <br />
+                    Available 6pm-10pm PT
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">The Trevor Project (LGBTQ+)</p>
+                  <p className="text-sm text-muted-foreground">
+                    Call 1-866-488-7386 - Available 24/7
+                    <br />
+                    Text START to 678678
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="font-medium text-lg">Additional Resources</h3>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">NAMI HelpLine</p>
+                  <p className="text-sm text-muted-foreground">
+                    Call 1-800-950-NAMI (6264)
+                    <br />
+                    Available Mon-Fri, 10am-10pm ET
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-sm text-muted-foreground mt-6">
+                All resources listed are verified and maintained by recognized mental health organizations. If you're experiencing an immediate emergency, please call 911.
+              </p>
             </div>
           </TabsContent>
         </Tabs>
