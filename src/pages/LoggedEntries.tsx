@@ -16,6 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Search, Calendar } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const LoggedEntries = () => {
   const navigate = useNavigate();
@@ -23,6 +26,8 @@ const LoggedEntries = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [sortBy, setSortBy] = useState<string>("recent");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [timeFilter, setTimeFilter] = useState("all");
 
   const { data: foods = [], isLoading } = useQuery({
     queryKey: ['foods', user?.id],
@@ -76,24 +81,50 @@ const LoggedEntries = () => {
     }
   });
 
-  const sortedFoods = [...foods].sort((a, b) => {
-    switch (sortBy) {
-      case "recent":
-        return b.date.getTime() - a.date.getTime();
-      case "rating":
-        const avgA = (a.tasteRating + a.satisfactionRating + a.fullnessRating) / 3;
-        const avgB = (b.tasteRating + b.satisfactionRating + b.fullnessRating) / 3;
-        return avgB - avgA;
-      case "taste":
-        return b.tasteRating - a.tasteRating;
-      case "satisfaction":
-        return b.satisfactionRating - a.satisfactionRating;
-      case "fullness":
-        return b.fullnessRating - a.fullnessRating;
+  const filterEntriesByTime = (entries: FoodItem[]) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const thisWeekStart = new Date(today);
+    thisWeekStart.setDate(thisWeekStart.getDate() - today.getDay());
+
+    switch (timeFilter) {
+      case "today":
+        return entries.filter(entry => entry.date >= today);
+      case "yesterday":
+        return entries.filter(entry => entry.date >= yesterday && entry.date < today);
+      case "thisWeek":
+        return entries.filter(entry => entry.date >= thisWeekStart);
       default:
-        return 0;
+        return entries;
     }
-  });
+  };
+
+  const filteredAndSortedFoods = (foods || [])
+    .filter(food => 
+      food.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      food.notes?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(food => filterEntriesByTime([food]).length > 0)
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "recent":
+          return b.date.getTime() - a.date.getTime();
+        case "rating":
+          const avgA = (a.tasteRating + a.satisfactionRating + a.fullnessRating) / 3;
+          const avgB = (b.tasteRating + b.satisfactionRating + b.fullnessRating) / 3;
+          return avgB - avgA;
+        case "taste":
+          return b.tasteRating - a.tasteRating;
+        case "satisfaction":
+          return b.satisfactionRating - a.satisfactionRating;
+        case "fullness":
+          return b.fullnessRating - a.fullnessRating;
+        default:
+          return 0;
+      }
+    });
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
@@ -110,9 +141,17 @@ const LoggedEntries = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white py-4 px-4 sm:py-8">
+      <div className="min-h-screen bg-white dark:bg-background py-4 px-4 sm:py-8">
         <div className="container max-w-2xl mx-auto">
-          <p className="text-center text-gray-500">Loading your food entries...</p>
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-32 w-full" />
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-40 w-full" />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -146,12 +185,30 @@ const LoggedEntries = () => {
           monthlyGoal={monthlyGoal}
         />
 
-        <div className="mb-6">
-          <Select
-            value={sortBy}
-            onValueChange={setSortBy}
-          >
-            <SelectTrigger className="w-full sm:w-[200px]">
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Input
+              placeholder="Search entries..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={timeFilter} onValueChange={setTimeFilter}>
+            <SelectTrigger className="w-full sm:w-[150px]">
+              <Calendar className="mr-2 h-4 w-4" />
+              <SelectValue placeholder="Time period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All time</SelectItem>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="yesterday">Yesterday</SelectItem>
+              <SelectItem value="thisWeek">This week</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-full sm:w-[150px]">
               <SelectValue placeholder="Sort by..." />
             </SelectTrigger>
             <SelectContent>
@@ -165,18 +222,40 @@ const LoggedEntries = () => {
         </div>
 
         <div className="space-y-4">
-          {sortedFoods.map((food) => (
+          {filteredAndSortedFoods.map((food) => (
             <FoodEntry
               key={food.id}
               {...food}
               onDelete={() => deleteMutation.mutate(food.id)}
             />
           ))}
-          {foods.length === 0 && (
-            <p className="text-center text-orange-600/60 py-8">
-              No food entries yet. Start by adding one!
+          {foods.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="mb-4">
+                <img 
+                  src="/eaten-carrot-logo.svg" 
+                  alt="No entries" 
+                  className="w-24 h-24 mx-auto opacity-50"
+                />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                No food entries yet
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Start tracking your food journey by adding your first entry
+              </p>
+              <Button 
+                onClick={() => navigate("/")}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Add Your First Entry
+              </Button>
+            </div>
+          ) : filteredAndSortedFoods.length === 0 ? (
+            <p className="text-center text-gray-500 py-8">
+              No entries match your search criteria
             </p>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
