@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FoodEntry } from "@/components/FoodEntry";
 import { useToast } from "@/hooks/use-toast";
 import { CabbageTracker } from "@/components/CabbageTracker";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,26 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import type { FoodItem } from "@/types/food";
 import type { DbFoodEntry } from "@/types/database";
 import { useAuth } from "@/contexts/AuthContext";
-import { DateRangeFilter } from "@/components/food/DateRangeFilter";
-import { FoodStats } from "@/components/food/FoodStats";
-import { ExportButton } from "@/components/food/ExportButton";
 import { filterEntriesByDateRange } from "@/utils/dateFilters";
-import { SearchBar } from "@/components/food/SearchBar";
-import { SortSelect } from "@/components/food/SortSelect";
-import { BulkActionBar } from "@/components/food/BulkActionBar";
-import { EmptyState } from "@/components/food/EmptyState";
-import { HeaderActions } from "@/components/food/HeaderActions";
+import { LoggedEntriesHeader } from "@/components/food/LoggedEntriesHeader";
+import { FilterBar } from "@/components/food/FilterBar";
+import { FoodList } from "@/components/food/FoodList";
+import { DeleteConfirmDialog } from "@/components/food/DeleteConfirmDialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 const LoggedEntries = () => {
   const { toast } = useToast();
@@ -92,23 +77,17 @@ const LoggedEntries = () => {
     }
   });
 
-  const handleBulkDelete = () => {
-    if (selectedEntries.length > 0) {
-      setShowDeleteDialog(true);
-    }
-  };
-
-  const confirmBulkDelete = () => {
-    deleteMutation.mutate(selectedEntries);
-    setShowDeleteDialog(false);
-  };
-
   const toggleEntrySelection = (id: string) => {
     setSelectedEntries(prev =>
       prev.includes(id)
         ? prev.filter(entryId => entryId !== id)
         : [...prev, id]
     );
+  };
+
+  const confirmBulkDelete = () => {
+    deleteMutation.mutate(selectedEntries);
+    setShowDeleteDialog(false);
   };
 
   const filteredAndSortedFoods = (foods || [])
@@ -171,69 +150,37 @@ const LoggedEntries = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-background py-4 px-4 sm:py-8">
       <div className="container max-w-2xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white">
-            Logged Entries
-          </h1>
-          <HeaderActions />
-        </div>
+        <LoggedEntriesHeader />
 
         <CabbageTracker 
           newFoodsCount={newFoodsThisMonth}
           monthlyGoal={monthlyGoal}
         />
 
-        <FoodStats foods={filteredAndSortedFoods} />
+        <FilterBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          timeFilter={timeFilter}
+          setTimeFilter={setTimeFilter}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          foods={filteredAndSortedFoods}
+        />
 
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <DateRangeFilter value={timeFilter} onChange={setTimeFilter} />
-          <SortSelect value={sortBy} onValueChange={setSortBy} />
-          <ExportButton foods={filteredAndSortedFoods} />
-        </div>
+        <FoodList
+          foods={filteredAndSortedFoods}
+          selectedEntries={selectedEntries}
+          onDelete={deleteMutation.mutate}
+          onToggleSelect={toggleEntrySelection}
+          showDeleteDialog={showDeleteDialog}
+          setShowDeleteDialog={setShowDeleteDialog}
+        />
 
-        {selectedEntries.length > 0 && (
-          <BulkActionBar
-            selectedCount={selectedEntries.length}
-            onDelete={handleBulkDelete}
-          />
-        )}
-
-        <div className="space-y-4">
-          {filteredAndSortedFoods.map((food) => (
-            <FoodEntry
-              key={food.id}
-              {...food}
-              onDelete={(id) => deleteMutation.mutate([id])}
-              selected={selectedEntries.includes(food.id)}
-              onSelect={toggleEntrySelection}
-            />
-          ))}
-          {foods.length === 0 ? (
-            <EmptyState />
-          ) : filteredAndSortedFoods.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">
-              No entries match your search criteria
-            </p>
-          ) : null}
-        </div>
-
-        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the selected entries.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmBulkDelete}>
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <DeleteConfirmDialog
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          onConfirm={confirmBulkDelete}
+        />
       </div>
     </div>
   );
