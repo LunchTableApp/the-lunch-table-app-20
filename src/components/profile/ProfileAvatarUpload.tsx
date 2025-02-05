@@ -5,7 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import type { Database } from "@/integrations/supabase/types";
+
+type Profile = Database['public']['Tables']['profiles']['Row'];
 
 export const ProfileAvatarUpload = () => {
   const { toast } = useToast();
@@ -13,6 +16,26 @@ export const ProfileAvatarUpload = () => {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+
+  const { data: profile } = useQuery<Profile | null>({
+    queryKey: ['profile', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+      
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return null;
+      }
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -78,7 +101,7 @@ export const ProfileAvatarUpload = () => {
         disabled={uploading}
       >
         <Avatar className="h-24 w-24">
-          <AvatarImage src={user?.user_metadata?.avatar_url} />
+          <AvatarImage src={profile?.avatar_url || undefined} />
           <AvatarFallback>
             <User className="h-12 w-12" />
           </AvatarFallback>
