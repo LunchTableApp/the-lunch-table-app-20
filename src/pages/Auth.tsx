@@ -1,3 +1,4 @@
+
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/integrations/supabase/client';
@@ -87,7 +88,7 @@ const AuthPage = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">
-            Welcome to Lunch Table
+            Welcome to lunchtable.app
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Sign in or create an account to track your food journey
