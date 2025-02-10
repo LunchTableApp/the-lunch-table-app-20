@@ -42,11 +42,11 @@ const Index = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      setShowTimerDialog(true);
       toast({
         title: "Food saved",
         description: "Your food entry has been saved successfully!",
       });
+      setShowTimerDialog(true); // Show timer dialog immediately after successful save
     },
     onError: (error) => {
       console.error('Save error:', error);
