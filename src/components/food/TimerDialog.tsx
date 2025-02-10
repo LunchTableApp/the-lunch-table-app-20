@@ -33,14 +33,14 @@ export const TimerDialog = ({ isOpen, onClose }: TimerDialogProps) => {
     setTimeout(() => {
       // Show notification when timer is done
       toast({
-        title: "Timer Complete!",
-        description: `${minutesNum} minutes have passed since your meal`,
+        title: "Time to Check In!",
+        description: "How are you feeling after your meal?",
       });
     }, milliseconds);
 
     toast({
-      title: "Timer Started",
-      description: `You'll be notified in ${minutesNum} minutes`,
+      title: "Reminder Set",
+      description: `We'll check how you're feeling in ${minutesNum} minutes`,
     });
     
     onClose();
@@ -52,13 +52,13 @@ export const TimerDialog = ({ isOpen, onClose }: TimerDialogProps) => {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Timer className="h-5 w-5" />
-            Set Reminder Timer
+            Want a reminder to check how you feel?
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div>
             <label htmlFor="minutes" className="block text-sm font-medium text-gray-700 mb-1">
-              Minutes until reminder
+              When should we check in? (minutes)
             </label>
             <div className="flex gap-2">
               <Input
@@ -75,7 +75,7 @@ export const TimerDialog = ({ isOpen, onClose }: TimerDialogProps) => {
             </div>
           </div>
           <Button onClick={handleStartTimer} className="w-full">
-            Start Timer
+            Set Reminder
           </Button>
         </div>
       </DialogContent>
