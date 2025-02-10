@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,7 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 export function ProfileMenu() {
   const { user } = useAuth();
   const [theme, setTheme] = useState<"light" | "dark">(
-    localStorage.getItem("theme") as "light" | "dark" || "light"
+    () => (localStorage.getItem("theme") as "light" | "dark") || "light"
   );
 
   const { data: profile } = useQuery<Profile | null>({
