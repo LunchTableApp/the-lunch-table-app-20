@@ -46,6 +46,15 @@ export const TimerDialog = ({ isOpen, onClose }: TimerDialogProps) => {
     onClose();
   };
 
+  const handleMinutesChange = (value: string) => {
+    const num = parseInt(value);
+    if (!isNaN(num)) {
+      // Round to nearest 10
+      const roundedNum = Math.max(10, Math.round(num / 10) * 10);
+      setMinutes(roundedNum.toString());
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
@@ -65,8 +74,9 @@ export const TimerDialog = ({ isOpen, onClose }: TimerDialogProps) => {
                 id="minutes"
                 type="number"
                 value={minutes}
-                onChange={(e) => setMinutes(e.target.value)}
-                min="1"
+                onChange={(e) => handleMinutesChange(e.target.value)}
+                min="10"
+                step="10"
                 className="flex-1"
               />
               <Button variant="ghost" size="icon" onClick={onClose}>
@@ -82,3 +92,4 @@ export const TimerDialog = ({ isOpen, onClose }: TimerDialogProps) => {
     </Dialog>
   );
 };
+
