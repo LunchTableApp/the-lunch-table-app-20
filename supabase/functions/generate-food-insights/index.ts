@@ -16,8 +16,11 @@ serve(async (req) => {
   try {
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
+      console.error('OpenAI API key not found in environment');
       throw new Error('OpenAI API key not configured');
     }
+
+    console.log('API Key present:', !!openAIApiKey);
 
     const { foodName } = await req.json();
     if (!foodName) {
@@ -25,12 +28,14 @@ serve(async (req) => {
     }
 
     console.log('Starting OpenAI request for food:', foodName);
+    console.log('Making request to OpenAI API...');
 
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${openAIApiKey.trim()}`,
         'Content-Type': 'application/json',
+        'OpenAI-Organization': 'org-KKN9mxWvZxJxp5SQI0JbgNXy'
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
