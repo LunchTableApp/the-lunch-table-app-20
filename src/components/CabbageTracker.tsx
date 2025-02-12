@@ -1,3 +1,4 @@
+
 interface CabbageTrackerProps {
   newFoodsCount: number;
   monthlyGoal: number;
@@ -13,8 +14,8 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8 animate-fadeIn">
-      <h2 className="text-xl font-semibold mb-4 text-black dark:text-black">New Foods Progress</h2>
+    <div className="bg-white dark:bg-black rounded-lg shadow-md p-6 mb-8 animate-fadeIn">
+      <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">New Foods Progress</h2>
       <div className="flex justify-center mb-4">
         <div className="relative w-64 h-64 flex items-center justify-center">
           {/* Background circle */}
@@ -23,7 +24,7 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
               cx="128"
               cy="128"
               r={radius}
-              className="stroke-gray-200"
+              className="stroke-gray-200 dark:stroke-gray-700"
               strokeWidth="12"
               fill="none"
             />
@@ -43,7 +44,7 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
           
           {/* Center text */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-3xl font-bold text-primary">
+            <span className="text-3xl font-bold text-primary dark:text-primary">
               {newFoodsCount}/{monthlyGoal}
             </span>
           </div>
@@ -73,11 +74,11 @@ export const CabbageTracker = ({ newFoodsCount, monthlyGoal }: CabbageTrackerPro
             🎉 Congratulations! You've reached your monthly goal! 🎉
           </p>
         ) : (
-          <p className="text-lg font-medium">
+          <p className="text-lg font-medium dark:text-white">
             {newFoodsCount} of {monthlyGoal} new foods tried
           </p>
         )}
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           {percentage.toFixed(0)}% of monthly goal
         </p>
       </div>
