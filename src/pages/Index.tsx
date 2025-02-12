@@ -7,13 +7,11 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMutation } from "@tanstack/react-query";
-import { TimerDialog } from "@/components/food/TimerDialog";
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const [showTimerDialog, setShowTimerDialog] = useState(false);
 
   const createFoodMutation = useMutation({
     mutationFn: async (newFood: {
@@ -46,7 +44,7 @@ const Index = () => {
         title: "Food saved",
         description: "Your food entry has been saved successfully!",
       });
-      setShowTimerDialog(true); // Show timer dialog immediately after successful save
+      navigate("/logged-entries");
     },
     onError: (error) => {
       console.error('Save error:', error);
@@ -92,13 +90,6 @@ const Index = () => {
           </Button>
         </div>
         <FoodForm onSubmit={handleAddFood} />
-        <TimerDialog 
-          isOpen={showTimerDialog} 
-          onClose={() => {
-            setShowTimerDialog(false);
-            navigate("/logged-entries");
-          }} 
-        />
       </div>
     </div>
   );
