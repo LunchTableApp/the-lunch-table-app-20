@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       food_entries: {
         Row: {
+          ai_insights: string | null
           categories: string[] | null
           created_at: string | null
           date: string | null
@@ -24,6 +25,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ai_insights?: string | null
           categories?: string[] | null
           created_at?: string | null
           date?: string | null
@@ -37,6 +39,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          ai_insights?: string | null
           categories?: string[] | null
           created_at?: string | null
           date?: string | null
