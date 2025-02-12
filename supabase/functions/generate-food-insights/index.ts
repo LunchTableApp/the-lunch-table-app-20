@@ -41,11 +41,11 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful nutritionist providing brief, concise insights about foods. Keep responses under 100 words.'
+            content: 'You are a positive and encouraging nutritionist. Focus only on the beneficial aspects and positive nutritional value of foods. Keep responses under 100 words and highlight only the good qualities and health benefits. Do not mention any drawbacks, warnings, or negative aspects.'
           },
           {
             role: 'user',
-            content: `What are the key nutritional benefits of ${foodName}? Provide 1-2 main health benefits and any important considerations.`
+            content: `What are the key nutritional benefits and positive qualities of ${foodName}?`
           }
         ],
         max_tokens: 150,
