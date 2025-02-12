@@ -34,8 +34,7 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openAIApiKey.trim()}`,
-        'Content-Type': 'application/json',
-        'OpenAI-Organization': 'org-KKN9mxWvZxJxp5SQI0JbgNXy'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
