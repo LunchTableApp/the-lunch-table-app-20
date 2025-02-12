@@ -1,3 +1,4 @@
+
 import { Carrot, Trash, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CategoryBadge } from "./food/CategoryBadge";
@@ -40,7 +41,7 @@ export const FoodEntry = ({
 
   const RatingDisplay = ({ label, rating }: { label: string; rating: number }) => (
     <div className="flex flex-col gap-1">
-      <span className="text-xs sm:text-sm text-gray-600">{label}</span>
+      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{label}</span>
       <div className="flex">
         {[1, 2, 3, 4, 5].map((carrot) => (
           <div key={carrot} className="relative">
@@ -50,7 +51,7 @@ export const FoodEntry = ({
                 "transition-colors rotate-180",
                 carrot <= rating
                   ? "fill-orange-400 text-orange-400"
-                  : "text-gray-300"
+                  : "text-gray-300 dark:text-gray-600"
               )}
             />
           </div>
@@ -61,7 +62,7 @@ export const FoodEntry = ({
 
   return (
     <div className={cn(
-      "bg-white rounded-lg shadow-md p-3 sm:p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-green-400",
+      "bg-white dark:bg-black rounded-lg shadow-md p-3 sm:p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-green-400",
       selected && "ring-2 ring-primary"
     )}>
       <div className="flex justify-between items-start gap-2">
@@ -74,14 +75,14 @@ export const FoodEntry = ({
             />
           )}
           <div>
-            <h3 className="font-semibold text-base sm:text-lg text-gray-800 hover:text-green-600 transition-colors">
+            <h3 className="font-semibold text-base sm:text-lg text-gray-800 dark:text-gray-100 hover:text-green-600 transition-colors">
               {name}
             </h3>
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-xs sm:text-sm text-black">
+              <p className="text-xs sm:text-sm text-black dark:text-gray-300">
                 {date.toLocaleDateString()}
               </p>
-              <span className={cn("text-xs sm:text-sm px-2 py-0.5 rounded-full", getAverageColor(parseFloat(averageRating)))}>
+              <span className={cn("text-xs sm:text-sm px-2 py-0.5 rounded-full dark:bg-opacity-20", getAverageColor(parseFloat(averageRating)))}>
                 Avg: {averageRating}★
               </span>
             </div>
@@ -93,7 +94,7 @@ export const FoodEntry = ({
               </div>
             )}
             {notes && (
-              <p className="mt-2 text-xs sm:text-sm text-gray-600">
+              <p className="mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 {notes}
               </p>
             )}
