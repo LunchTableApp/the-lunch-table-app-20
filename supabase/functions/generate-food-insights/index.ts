@@ -37,7 +37,7 @@ serve(async (req) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-3.5-turbo',
         messages: [
           {
             role: 'system',
@@ -48,13 +48,29 @@ serve(async (req) => {
             content: `What are the key nutritional benefits of ${foodName}? Provide 1-2 main health benefits and any important considerations.`
           }
         ],
-        max_tokens: 150
+        max_tokens: 150,
+        temperature: 0.7
       })
     });
 
     if (!openAIResponse.ok) {
       const errorData = await openAIResponse.json();
       console.error('OpenAI API error details:', errorData);
+      
+      // Check for quota exceeded error
+      if (errorData.error?.code === 'insufficient_quota') {
+        return new Response(
+          JSON.stringify({ 
+            error: 'OpenAI API quota exceeded', 
+            details: 'Please check your OpenAI account billing and quota.' 
+          }),
+          { 
+            status: 402,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+      
       throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
     }
 
