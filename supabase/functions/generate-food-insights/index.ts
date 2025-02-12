@@ -16,19 +16,17 @@ serve(async (req) => {
   try {
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
-      console.error('OpenAI API key not found');
       throw new Error('OpenAI API key not configured');
     }
 
     const { foodName } = await req.json();
     if (!foodName) {
-      console.error('No food name provided');
       throw new Error('Food name is required');
     }
 
-    console.log('Generating insights for food:', foodName);
+    console.log('Starting OpenAI request for food:', foodName);
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openAIApiKey}`,
@@ -43,44 +41,48 @@ serve(async (req) => {
           },
           {
             role: 'user',
-            content: `Provide a brief nutritional insight about ${foodName}. Include 1-2 key health benefits and any notable considerations.`
+            content: `What are the key nutritional benefits of ${foodName}? Provide 1-2 main health benefits and any important considerations.`
           }
         ],
-        temperature: 0.7,
-        max_tokens: 150,
-      }),
+        max_tokens: 150
+      })
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('OpenAI API error:', error);
-      throw new Error(`OpenAI API error: ${JSON.stringify(error)}`);
+    if (!openAIResponse.ok) {
+      const errorData = await openAIResponse.json();
+      console.error('OpenAI API error details:', errorData);
+      throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
     }
 
-    const data = await response.json();
+    const data = await openAIResponse.json();
+    console.log('OpenAI response received successfully');
+
+    if (!data.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response format from OpenAI');
+    }
+
     const insights = data.choices[0].message.content;
-    
-    console.log('Successfully generated insights:', insights);
+    console.log('Generated insights:', insights);
 
     return new Response(
       JSON.stringify({ insights }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      },
+      }
     );
 
   } catch (error) {
-    console.error('Error in generate-food-insights function:', error);
+    console.error('Function error:', error);
     
     return new Response(
       JSON.stringify({ 
-        error: 'Failed to generate food insights',
+        error: 'Failed to generate food insights', 
         details: error.message 
       }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      },
+      }
     );
   }
 });
