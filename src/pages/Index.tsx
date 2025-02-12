@@ -7,11 +7,25 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMutation } from "@tanstack/react-query";
+import { InsightsDialog } from "@/components/food/InsightsDialog";
 
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const [showInsights, setShowInsights] = useState(false);
+  const [currentFood, setCurrentFood] = useState({ name: "", insights: "" });
+
+  const generateInsightsMutation = useMutation({
+    mutationFn: async (foodName: string) => {
+      const { data, error } = await supabase.functions.invoke('generate-food-insights', {
+        body: { foodName }
+      });
+
+      if (error) throw error;
+      return data.insights;
+    }
+  });
 
   const createFoodMutation = useMutation({
     mutationFn: async (newFood: {
@@ -24,6 +38,9 @@ const Index = () => {
     }) => {
       if (!user) throw new Error("User must be logged in");
 
+      // Generate insights first
+      const insights = await generateInsightsMutation.mutateAsync(newFood.name);
+
       const { error } = await supabase
         .from('food_entries')
         .insert({
@@ -35,16 +52,19 @@ const Index = () => {
           notes: newFood.notes,
           is_new_food: newFood.isNewFood,
           date: new Date().toISOString(),
+          ai_insights: insights,
         });
 
       if (error) throw error;
+      return { name: newFood.name, insights };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({
         title: "Food saved",
         description: "Your food entry has been saved successfully!",
       });
-      navigate("/logged-entries");
+      setCurrentFood({ name: data.name, insights: data.insights });
+      setShowInsights(true);
     },
     onError: (error) => {
       console.error('Save error:', error);
@@ -90,6 +110,17 @@ const Index = () => {
           </Button>
         </div>
         <FoodForm onSubmit={handleAddFood} />
+        <InsightsDialog
+          showInsights={showInsights}
+          setShowInsights={(show) => {
+            setShowInsights(show);
+            if (!show) {
+              navigate("/logged-entries");
+            }
+          }}
+          foodName={currentFood.name}
+          insights={currentFood.insights}
+        />
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+
 export interface FoodItem {
   id: string;
   name: string;
@@ -8,6 +9,7 @@ export interface FoodItem {
   date: Date;
   isNewFood?: boolean;
   categories?: string[];
+  aiInsights?: string;
 }
 
 export interface FoodFormProps {
