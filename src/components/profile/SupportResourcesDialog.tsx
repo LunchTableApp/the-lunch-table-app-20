@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -6,8 +7,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, X } from "lucide-react";
 import { useState } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 
 export const SupportResourcesDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,62 +24,72 @@ export const SupportResourcesDialog = () => {
         </DropdownMenuItem>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle>Support Resources</DialogTitle>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(false)}
+            className="h-8 w-8"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </DialogHeader>
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="font-medium text-lg">24/7 Crisis Support</h3>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">988 Suicide & Crisis Lifeline</p>
-              <p className="text-sm text-muted-foreground">
-                Call or text 988 - Free, confidential support available 24/7
-              </p>
+        <ScrollArea className="h-[400px] pr-4">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <h3 className="font-medium text-lg">24/7 Crisis Support</h3>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">988 Suicide & Crisis Lifeline</p>
+                <p className="text-sm text-muted-foreground">
+                  Call or text 988 - Free, confidential support available 24/7
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Crisis Text Line</p>
+                <p className="text-sm text-muted-foreground">
+                  Text HOME to 741741 - Free crisis counseling 24/7
+                </p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Crisis Text Line</p>
-              <p className="text-sm text-muted-foreground">
-                Text HOME to 741741 - Free crisis counseling 24/7
-              </p>
-            </div>
-          </div>
 
-          <div className="space-y-3">
-            <h3 className="font-medium text-lg">Teen-Specific Support</h3>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Teen Line</p>
-              <p className="text-sm text-muted-foreground">
-                Call 310-855-HOPE or Text "TEEN" to 839863
-                <br />
-                Available 6pm-10pm PT
-              </p>
+            <div className="space-y-3">
+              <h3 className="font-medium text-lg">Teen-Specific Support</h3>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Teen Line</p>
+                <p className="text-sm text-muted-foreground">
+                  Call 310-855-HOPE or Text "TEEN" to 839863
+                  <br />
+                  Available 6pm-10pm PT
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">The Trevor Project (LGBTQ+)</p>
+                <p className="text-sm text-muted-foreground">
+                  Call 1-866-488-7386 - Available 24/7
+                  <br />
+                  Text START to 678678
+                </p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">The Trevor Project (LGBTQ+)</p>
-              <p className="text-sm text-muted-foreground">
-                Call 1-866-488-7386 - Available 24/7
-                <br />
-                Text START to 678678
-              </p>
-            </div>
-          </div>
 
-          <div className="space-y-3">
-            <h3 className="font-medium text-lg">Additional Resources</h3>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">NAMI HelpLine</p>
-              <p className="text-sm text-muted-foreground">
-                Call 1-800-950-NAMI (6264)
-                <br />
-                Available Mon-Fri, 10am-10pm ET
-              </p>
+            <div className="space-y-3">
+              <h3 className="font-medium text-lg">Additional Resources</h3>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">NAMI HelpLine</p>
+                <p className="text-sm text-muted-foreground">
+                  Call 1-800-950-NAMI (6264)
+                  <br />
+                  Available Mon-Fri, 10am-10pm ET
+                </p>
+              </div>
             </div>
-          </div>
 
-          <p className="text-sm text-muted-foreground mt-6">
-            All resources listed are verified and maintained by recognized mental health organizations. If you're experiencing an immediate emergency, please call 911.
-          </p>
-        </div>
+            <p className="text-sm text-muted-foreground mt-6">
+              All resources listed are verified and maintained by recognized mental health organizations. If you're experiencing an immediate emergency, please call 911.
+            </p>
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
