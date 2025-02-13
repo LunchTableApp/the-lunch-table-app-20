@@ -1,3 +1,4 @@
+
 import { useFoodForm } from "@/hooks/useFoodForm";
 import { RatingsGroup } from "./food/RatingsGroup";
 import { NotesSection } from "./food/NotesSection";
@@ -31,7 +32,7 @@ export const FoodForm = ({ onSubmit }: FoodFormProps) => {
   } = useFoodForm(onSubmit);
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
+    <form onSubmit={handleSubmit} className="bg-white dark:bg-black rounded-lg shadow-md p-6 mb-8">
       <FoodNameInput name={name} setName={setName} />
       <FormHeader isNewFood={isNewFood} setIsNewFood={setIsNewFood} />
       
