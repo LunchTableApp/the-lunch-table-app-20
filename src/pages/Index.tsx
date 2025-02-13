@@ -99,7 +99,7 @@ const Index = () => {
       <div className="container max-w-2xl">
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-4xl font-bold text-primary text-center mb-4">
-            Food Logger
+            LunchTable
           </h1>
           <Button 
             onClick={() => navigate("/logged-entries")}
