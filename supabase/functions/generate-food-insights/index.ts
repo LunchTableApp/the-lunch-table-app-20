@@ -48,4 +48,61 @@ serve(async (req) => {
             content: `What are the key nutritional benefits and positive qualities of ${foodName}?`
           }
         ],
-        
+        max_tokens: 150,
+        temperature: 0.7
+      })
+    });
+
+    if (!openAIResponse.ok) {
+      const errorData = await openAIResponse.json();
+      console.error('OpenAI API error details:', errorData);
+      
+      // Check for quota exceeded error
+      if (errorData.error?.code === 'insufficient_quota') {
+        return new Response(
+          JSON.stringify({ 
+            error: 'OpenAI API quota exceeded', 
+            details: 'Please check your OpenAI account billing and quota.' 
+          }),
+          { 
+            status: 402,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+      
+      throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
+    }
+
+    const data = await openAIResponse.json();
+    console.log('OpenAI response received successfully');
+
+    if (!data.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response format from OpenAI');
+    }
+
+    const insights = data.choices[0].message.content;
+    console.log('Generated insights:', insights);
+
+    return new Response(
+      JSON.stringify({ insights }),
+      { 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+
+  } catch (error) {
+    console.error('Function error:', error);
+    
+    return new Response(
+      JSON.stringify({ 
+        error: 'Failed to generate food insights', 
+        details: error.message 
+      }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+});
