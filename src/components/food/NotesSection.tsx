@@ -16,7 +16,7 @@ export const NotesSection = ({ notes, setNotes }: NotesSectionProps) => (
       value={notes}
       onChange={(e) => setNotes(e.target.value)}
       placeholder="Add your thoughts about this food..."
-      className="min-h-[100px] bg-white"
+      className="min-h-[100px] bg-white dark:bg-black"
     />
   </div>
 );
