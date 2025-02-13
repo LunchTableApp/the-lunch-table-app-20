@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -7,7 +8,7 @@ const GoalSettings = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-black py-8">
       <div className="container max-w-2xl">
         <Card className="animate-fadeIn">
           <CardHeader>
