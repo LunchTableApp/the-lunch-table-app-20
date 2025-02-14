@@ -13,14 +13,14 @@ const ANSWER_OPTIONS = [
 ];
 
 const QUIZ_QUESTIONS = [
-  "How willing are you to eat and try new foods?",
+  "How likely are you to eat and try new foods?",
   "How likely are you to restrict food?",
   "How likely are you to negatively associate food with body image?",
   "How likely are you to only eat certain safety foods?",
   "How likely are you to spend a lot of time working towards a set goal?",
   "How likely are you to reach out to others for support even if it may be uncomfortable?",
   "How many times do you plan to log a food each week?",
-  "How long do you plan on spending to recover your food relationships?",
+  "How long do you plan on spending to recover your food relationships?"
 ];
 
 export const QuizComponent = () => {
