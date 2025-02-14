@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +18,14 @@ const TIME_RANGE_OPTIONS = [
   { value: "12months", label: "12 months" },
   { value: "18months", label: "18 months" },
   { value: "24months", label: "24 months" },
+];
+
+const WEEKLY_LOG_OPTIONS = [
+  { value: "2times", label: "2 times per week" },
+  { value: "7times", label: "7 times per week" },
+  { value: "14times", label: "14 times per week" },
+  { value: "21times", label: "21 times per week" },
+  { value: "24times", label: "24 times per week" },
 ];
 
 const QUIZ_QUESTIONS = [
@@ -44,9 +51,12 @@ export const QuizComponent = () => {
   };
 
   const getAnswerOptions = (questionIndex: number) => {
-    return questionIndex === QUIZ_QUESTIONS.length - 1 
-      ? TIME_RANGE_OPTIONS 
-      : DEFAULT_ANSWER_OPTIONS;
+    if (questionIndex === QUIZ_QUESTIONS.length - 1) {
+      return TIME_RANGE_OPTIONS;
+    } else if (questionIndex === 6) { // Question 7 (index 6)
+      return WEEKLY_LOG_OPTIONS;
+    }
+    return DEFAULT_ANSWER_OPTIONS;
   };
 
   const handleNext = () => {
