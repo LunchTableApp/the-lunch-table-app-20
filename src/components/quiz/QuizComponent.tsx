@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +14,7 @@ const ANSWER_OPTIONS = [
 
 const QUIZ_QUESTIONS = [
   "How willing are you to eat and try new foods?",
+  "How likely are you to restrict food?",
   "How likely are you to try a dish from a cuisine you've never had before?",
   "How willing are you to try foods with unfamiliar ingredients?",
   "How likely are you to order something different at your favorite restaurant?",
@@ -22,8 +22,7 @@ const QUIZ_QUESTIONS = [
   "How likely are you to participate in food tastings or culinary events?",
   "How willing are you to try street food in a new country?",
   "How likely are you to experiment with cooking new recipes?",
-  "How willing are you to try food combinations others might find unusual?",
-  "How likely are you to recommend new foods to friends and family?"
+  "How willing are you to try food combinations others might find unusual?"
 ];
 
 export const QuizComponent = () => {
