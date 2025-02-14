@@ -14,11 +14,11 @@ const DEFAULT_ANSWER_OPTIONS = [
 ];
 
 const TIME_RANGE_OPTIONS = [
-  { value: "1month", label: "1 month" },
-  { value: "3months", label: "3 months" },
+  { value: "2months", label: "2 months" },
   { value: "6months", label: "6 months" },
-  { value: "9months", label: "9 months" },
   { value: "12months", label: "12 months" },
+  { value: "18months", label: "18 months" },
+  { value: "24months", label: "24 months" },
 ];
 
 const QUIZ_QUESTIONS = [
