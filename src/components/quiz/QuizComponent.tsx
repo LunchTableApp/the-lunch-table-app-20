@@ -18,7 +18,7 @@ const QUIZ_QUESTIONS = [
   "How likely are you to restrict food?",
   "How likely are you to negatively associate food with body image?",
   "How likely are you to only eat certain safety foods?",
-  "How likely are you to order something different at your favorite restaurant?",
+  "How likely are you to spend a lot of time working towards a set goal?",
   "How willing are you to try exotic or unusual fruits?",
   "How likely are you to participate in food tastings or culinary events?",
   "How willing are you to try street food in a new country?",
