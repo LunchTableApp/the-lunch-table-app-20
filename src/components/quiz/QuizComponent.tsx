@@ -1,15 +1,24 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
-const ANSWER_OPTIONS = [
+const DEFAULT_ANSWER_OPTIONS = [
   { value: "veryLikely", label: "Very Likely" },
   { value: "somewhatLikely", label: "Somewhat Likely" },
   { value: "neutral", label: "Neutral" },
   { value: "somewhatUnlikely", label: "Somewhat Unlikely" },
   { value: "notLikely", label: "Not Likely" },
+];
+
+const TIME_RANGE_OPTIONS = [
+  { value: "1month", label: "1 month" },
+  { value: "3months", label: "3 months" },
+  { value: "6months", label: "6 months" },
+  { value: "9months", label: "9 months" },
+  { value: "12months", label: "12 months" },
 ];
 
 const QUIZ_QUESTIONS = [
@@ -34,6 +43,12 @@ export const QuizComponent = () => {
     setAnswers(newAnswers);
   };
 
+  const getAnswerOptions = (questionIndex: number) => {
+    return questionIndex === QUIZ_QUESTIONS.length - 1 
+      ? TIME_RANGE_OPTIONS 
+      : DEFAULT_ANSWER_OPTIONS;
+  };
+
   const handleNext = () => {
     if (currentQuestion < QUIZ_QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -47,7 +62,6 @@ export const QuizComponent = () => {
   };
 
   const handleSubmit = () => {
-    // TODO: Implement quiz submission logic
     console.log("Quiz answers:", answers);
     setStarted(false);
     setCurrentQuestion(0);
@@ -91,7 +105,7 @@ export const QuizComponent = () => {
             onValueChange={handleAnswer}
             className="flex flex-col space-y-3"
           >
-            {ANSWER_OPTIONS.map((option) => (
+            {getAnswerOptions(currentQuestion).map((option) => (
               <div key={option.value} className="flex items-center space-x-3">
                 <RadioGroupItem value={option.value} id={option.value} />
                 <Label htmlFor={option.value}>{option.label}</Label>
