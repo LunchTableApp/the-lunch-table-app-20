@@ -17,7 +17,7 @@ const QUIZ_QUESTIONS = [
   "How willing are you to eat and try new foods?",
   "How likely are you to restrict food?",
   "How likely are you to negatively associate food with body image?",
-  "How willing are you to try foods with unfamiliar ingredients?",
+  "How likely are you to only eat certain safety foods?",
   "How likely are you to order something different at your favorite restaurant?",
   "How willing are you to try exotic or unusual fruits?",
   "How likely are you to participate in food tastings or culinary events?",
