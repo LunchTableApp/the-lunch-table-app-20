@@ -20,7 +20,7 @@ const QUIZ_QUESTIONS = [
   "How likely are you to only eat certain safety foods?",
   "How likely are you to spend a lot of time working towards a set goal?",
   "How likely are you to reach out to others for support even if it may be uncomfortable?",
-  "How likely are you to participate in food tastings or culinary events?",
+  "How many times do you plan to log a food each week?",
   "How willing are you to try street food in a new country?",
   "How likely are you to experiment with cooking new recipes?",
   "How willing are you to try food combinations others might find unusual?"
