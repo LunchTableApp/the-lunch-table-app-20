@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +10,7 @@ import Index from "./pages/Index";
 import FoodDetails from "./pages/FoodDetails";
 import LoggedEntries from "./pages/LoggedEntries";
 import GoalSettings from "./pages/GoalSettings";
+import Quiz from "./pages/Quiz";
 import AuthPage from "./pages/Auth";
 
 const queryClient = new QueryClient();
@@ -76,6 +78,17 @@ const App = () => (
                   <>
                     <ProfileMenu />
                     <GoalSettings />
+                  </>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz"
+              element={
+                <ProtectedRoute>
+                  <>
+                    <ProfileMenu />
+                    <Quiz />
                   </>
                 </ProtectedRoute>
               }

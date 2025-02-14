@@ -101,13 +101,20 @@ const Index = () => {
           <h1 className="text-4xl font-bold text-primary text-center mb-4">
             LunchTable
           </h1>
-          <Button 
-            onClick={() => navigate("/logged-entries")}
-            variant="outline"
-            className="mb-6"
-          >
-            View Logged Entries
-          </Button>
+          <div className="flex gap-4 mb-6">
+            <Button 
+              onClick={() => navigate("/logged-entries")}
+              variant="outline"
+            >
+              View Logged Entries
+            </Button>
+            <Button
+              onClick={() => navigate("/quiz")}
+              variant="outline"
+            >
+              Take the Quiz
+            </Button>
+          </div>
         </div>
         <FoodForm onSubmit={handleAddFood} />
         <InsightsDialog
