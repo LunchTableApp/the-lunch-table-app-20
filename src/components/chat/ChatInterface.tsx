@@ -39,6 +39,25 @@ export const ChatInterface = () => {
       if (input.includes("see") || input.includes("view") || input.includes("history")) {
         return "You can view your previous entries by clicking 'View Logged Entries'. This can help you notice patterns, but please be gentle with yourself as you review your journey.";
       }
+      if (input.includes("quiz")) {
+        return "You can take our supportive quiz by clicking the 'Take the Quiz' button on the main page. This quiz helps us understand how we can better support you on your journey.";
+      }
+      if (input.includes("chat") || input.includes("support")) {
+        return "You're already in the chat interface! I'm here to help you navigate the app, provide support, and answer any questions you might have. What would you like to know more about?";
+      }
+    }
+
+    // App-specific questions
+    if (input.includes("what is") || input.includes("what's") || input.includes("what does")) {
+      if (input.includes("lunchtable") || input.includes("this app")) {
+        return "LunchTable is a supportive app designed to help you track your eating experiences in a gentle, non-judgmental way. It's not about dieting or restrictions - it's about understanding your relationship with food and supporting your well-being.";
+      }
+      if (input.includes("rating") || input.includes("ratings")) {
+        return "When logging food entries, you can rate your experience based on taste, satisfaction, and fullness. These ratings help you understand your eating experiences better, but remember - there are no 'right' or 'wrong' ratings. It's all about your personal experience.";
+      }
+      if (input.includes("goal")) {
+        return "Goals in LunchTable are personal milestones that you set for yourself. They can be anything that feels meaningful to you - like trying new foods, eating mindfully, or developing a more peaceful relationship with food. You can set and adjust these goals at your own pace.";
+      }
     }
 
     // Support-related responses
@@ -46,12 +65,26 @@ export const ChatInterface = () => {
       return "I hear that you're feeling anxious, and that's completely valid. Would you like to talk more about what's worrying you? Remember, it's okay to take things one small step at a time, and there's no shame in reaching out for help.";
     }
 
-    if (input.includes("fail") || input.includes("bad") || input.includes("mess up")) {
+    if (input.includes("fail") || input.includes("bad") || input.includes("mess up") || input.includes("guilty")) {
       return "Please be kind to yourself - you haven't failed. Every moment is a new opportunity, and recovery isn't a straight line. Would you like to talk about what's troubling you? We can work together to find a supportive way forward.";
     }
 
     if (input.includes("help") || input.includes("support")) {
       return "I'm here to support you. Would you like to talk about what's on your mind? Remember, there are also professional resources available - would you like information about eating disorder helplines or mental health support services?";
+    }
+
+    if (input.includes("eat") || input.includes("food") || input.includes("meal")) {
+      if (input.includes("should") || input.includes("right") || input.includes("wrong")) {
+        return "There's no 'right' or 'wrong' way to eat. Everyone's journey with food is different, and it's important to listen to your body and work with healthcare professionals to develop an approach that works for you. Would you like to talk more about what's on your mind?";
+      }
+      if (input.includes("struggle") || input.includes("hard") || input.includes("difficult")) {
+        return "It's completely normal to find eating challenging sometimes. Your feelings are valid, and you're not alone in this. Would you like to explore what makes it difficult for you? Remember, professional support is available when you need it.";
+      }
+    }
+
+    // Recovery and progress-related responses
+    if (input.includes("recover") || input.includes("getting better") || input.includes("progress")) {
+      return "Recovery is a personal journey, and every small step counts. It's okay to have good days and challenging days - you're doing the best you can. Would you like to talk about what recovery means to you?";
     }
 
     // Default response for other queries
