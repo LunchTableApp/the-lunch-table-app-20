@@ -19,14 +19,17 @@ export const ChatInterface = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMessage = { role: "user", content: input };
+    const userMessage: Message = {
+      role: "user",
+      content: input
+    };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
 
     // Placeholder response - to be replaced with actual AI integration
     setTimeout(() => {
-      const botMessage = {
+      const botMessage: Message = {
         role: "assistant",
         content: "This is a placeholder response. The AI integration will be added later."
       };
