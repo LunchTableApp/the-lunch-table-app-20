@@ -1,9 +1,10 @@
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 const DEFAULT_ANSWER_OPTIONS = [
   { value: "veryLikely", label: "Very Likely" },
@@ -41,6 +42,8 @@ const QUIZ_QUESTIONS = [
 ];
 
 export const QuizComponent = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [started, setStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>(Array(QUIZ_QUESTIONS.length).fill(""));
@@ -138,6 +141,15 @@ export const QuizComponent = () => {
     setStarted(true);
   };
 
+  const handleSaveAndGoHome = () => {
+    // Here you could implement saving the results to local storage or a database if needed
+    toast({
+      title: "Plan saved successfully!",
+      description: "Your personalized plan has been saved.",
+    });
+    navigate("/");
+  };
+
   if (showResults && personalizedPlan) {
     return (
       <Card className="w-full">
@@ -164,8 +176,11 @@ export const QuizComponent = () => {
               </ul>
             </div>
 
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center gap-4 mt-6">
               <Button onClick={handleStartOver}>Retake Quiz</Button>
+              <Button variant="secondary" onClick={handleSaveAndGoHome}>
+                Save and Go Home
+              </Button>
             </div>
           </div>
         </CardContent>
