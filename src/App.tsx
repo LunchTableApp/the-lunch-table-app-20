@@ -11,6 +11,7 @@ import FoodDetails from "./pages/FoodDetails";
 import LoggedEntries from "./pages/LoggedEntries";
 import GoalSettings from "./pages/GoalSettings";
 import Quiz from "./pages/Quiz";
+import Chat from "./pages/Chat";
 import AuthPage from "./pages/Auth";
 
 const queryClient = new QueryClient();
@@ -89,6 +90,17 @@ const App = () => (
                   <>
                     <ProfileMenu />
                     <Quiz />
+                  </>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  <>
+                    <ProfileMenu />
+                    <Chat />
                   </>
                 </ProtectedRoute>
               }
