@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +20,13 @@ export const HeaderActions = () => {
         className="w-full sm:w-auto"
       >
         Add New Entry
+      </Button>
+      <Button 
+        onClick={() => navigate("/chat")} 
+        variant="outline"
+        className="w-full sm:w-auto"
+      >
+        Chat Assistant
       </Button>
     </div>
   );

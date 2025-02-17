@@ -114,6 +114,12 @@ const Index = () => {
             >
               Take the Quiz
             </Button>
+            <Button
+              onClick={() => navigate("/chat")}
+              variant="outline"
+            >
+              Chat Assistant
+            </Button>
           </div>
         </div>
         <FoodForm onSubmit={handleAddFood} />
