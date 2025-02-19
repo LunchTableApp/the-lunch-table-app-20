@@ -85,7 +85,7 @@ export const QuizComponent = ({ onResultsSaved }: QuizComponentProps) => {
             <div className="flex justify-center">
               <Button 
                 onClick={() => setStarted(true)}
-                className="text-lg px-8 py-6 rounded-xl bg-primary hover:bg-primary/90 animate-pulse hover:animate-none transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="text-lg px-8 py-6 rounded-xl bg-primary hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Start Your Journey
               </Button>
