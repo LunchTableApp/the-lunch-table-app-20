@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,7 +41,15 @@ const QUIZ_QUESTIONS = [
   "How long do you plan on spending to recover your food relationships?"
 ];
 
-export const QuizComponent = () => {
+interface QuizComponentProps {
+  onResultsSaved: (results: {
+    duration: string;
+    frequency: string;
+    recommendations: string[];
+  }) => void;
+}
+
+export const QuizComponent = ({ onResultsSaved }: QuizComponentProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [started, setStarted] = useState(false);
@@ -121,6 +129,11 @@ export const QuizComponent = () => {
     setStarted(false);
     setCurrentQuestion(0);
     setAnswers(Array(QUIZ_QUESTIONS.length).fill(""));
+    
+    // Save results to localStorage
+    localStorage.setItem('quizResults', JSON.stringify(plan));
+    // Update parent component
+    onResultsSaved(plan);
   };
 
   const handlePrevious = () => {
@@ -139,10 +152,11 @@ export const QuizComponent = () => {
     setShowResults(false);
     setPersonalizedPlan(null);
     setStarted(true);
+    localStorage.removeItem('quizResults');
+    onResultsSaved(null);
   };
 
   const handleSaveAndGoHome = () => {
-    // Here you could implement saving the results to local storage or a database if needed
     toast({
       title: "Plan saved successfully!",
       description: "Your personalized plan has been saved.",
