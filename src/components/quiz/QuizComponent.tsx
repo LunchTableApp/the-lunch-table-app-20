@@ -66,28 +66,29 @@ export const QuizComponent = ({ onResultsSaved }: QuizComponentProps) => {
   };
 
   if (showResults && personalizedPlan) {
-    return (
-      <QuizResultsView
-        results={personalizedPlan}
-        onStartOver={handleStartOver}
-        onSaveAndGoHome={handleSaveAndGoHome}
-      />
-    );
+    return <QuizResultsView results={personalizedPlan} onStartOver={handleStartOver} onSaveAndGoHome={handleSaveAndGoHome} />;
   }
 
   if (!started) {
     return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center">Food Preferences Quiz</CardTitle>
+      <Card className="w-full overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 pb-8">
+          <CardTitle className="text-3xl text-center font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+            Food Preferences Quiz
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <p className="text-center text-muted-foreground">
-              Take this quiz to help us understand your food preferences and adventurousness with trying new foods.
+        <CardContent className="pt-8">
+          <div className="space-y-8">
+            <p className="text-center text-lg text-muted-foreground">
+              Ready to discover your personalized food journey? Take this quick quiz to help us understand your preferences and create a tailored plan just for you! 🌟
             </p>
             <div className="flex justify-center">
-              <Button onClick={() => setStarted(true)}>Start Quiz</Button>
+              <Button 
+                onClick={() => setStarted(true)}
+                className="text-lg px-8 py-6 rounded-xl bg-primary hover:bg-primary/90 animate-pulse hover:animate-none transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Start Your Journey
+              </Button>
             </div>
           </div>
         </CardContent>

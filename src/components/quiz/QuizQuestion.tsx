@@ -32,43 +32,58 @@ export const QuizQuestion = ({
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
+    <Card className="w-full transform transition-all duration-300 hover:shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10">
         <CardTitle className="text-2xl text-center">
           Question {currentQuestion + 1} of {QUIZ_QUESTIONS.length}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-6">
-          <p className="text-lg font-medium text-center mb-6">
+      <CardContent className="p-8">
+        <div className="space-y-8">
+          <p className="text-xl font-medium text-center mb-8 text-primary/90">
             {QUIZ_QUESTIONS[currentQuestion]}
           </p>
           <RadioGroup
             value={answer}
             onValueChange={onAnswer}
-            className="flex flex-col space-y-3"
+            className="flex flex-col space-y-4"
           >
             {getAnswerOptions(currentQuestion).map((option) => (
-              <div key={option.value} className="flex items-center space-x-3">
+              <div 
+                key={option.value} 
+                className="flex items-center space-x-3 p-4 rounded-lg hover:bg-primary/5 transition-colors duration-200"
+              >
                 <RadioGroupItem value={option.value} id={option.value} />
-                <Label htmlFor={option.value}>{option.label}</Label>
+                <Label 
+                  htmlFor={option.value}
+                  className="text-lg cursor-pointer w-full"
+                >
+                  {option.label}
+                </Label>
               </div>
             ))}
           </RadioGroup>
-          <div className="flex justify-between mt-8">
+          <div className="flex justify-between mt-8 pt-4">
             <Button 
               variant="outline" 
               onClick={onPrevious}
               disabled={currentQuestion === 0}
+              className="px-6 py-2 text-lg hover:bg-primary/5"
             >
               Previous
             </Button>
             {currentQuestion === QUIZ_QUESTIONS.length - 1 ? (
-              <Button onClick={onSubmit}>Submit</Button>
+              <Button 
+                onClick={onSubmit}
+                className="px-8 py-2 text-lg bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                Get Your Results
+              </Button>
             ) : (
               <Button 
                 onClick={onNext}
                 disabled={!answer}
+                className="px-6 py-2 text-lg bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-300"
               >
                 Next
               </Button>
