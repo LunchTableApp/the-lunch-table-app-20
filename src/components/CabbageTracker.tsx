@@ -21,7 +21,7 @@ export const CabbageTracker = ({
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - percentage / 100 * circumference;
   return <div className="bg-white dark:bg-black rounded-lg shadow-md p-6 mb-8 animate-fadeIn">
-      <h2 className="text-xl font-semibold mb-4 text-center text-green-400">
+      <h2 className="text-xl font-semibold mb-4 text-black dark:text-white text-center">
         {monthName} Progress ({daysLeft} days left)
       </h2>
       <div className="flex justify-center mb-4">
