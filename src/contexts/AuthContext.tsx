@@ -9,22 +9,36 @@ interface AuthContextType {
   loading: boolean;
   authError: boolean;
   setAuthError: (error: boolean) => void;
+  demoMode: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({ 
   user: null, 
   loading: true, 
   authError: false,
-  setAuthError: () => {} 
+  setAuthError: () => {},
+  demoMode: false
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
+    // Check if demo mode is requested in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRequestedDemo = urlParams.get('demo') === 'true';
+    
+    if (isRequestedDemo) {
+      console.log("Demo mode requested via URL, enabling demo mode");
+      setDemoMode(true);
+      setLoading(false);
+      return;
+    }
+    
     // Get initial session
     const getInitialSession = async () => {
       try {
@@ -34,9 +48,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (error) {
           console.error("Auth initialization error:", error);
           setAuthError(true);
+          setDemoMode(true); // Auto-enable demo mode on auth error
           toast({
             title: "Connection Error",
-            description: "Unable to connect to authentication service. Please continue in demo mode.",
+            description: "Unable to connect to authentication service. Demo mode enabled.",
             variant: "destructive"
           });
           setLoading(false);
@@ -48,10 +63,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } catch (err) {
         console.error("Auth initialization failed:", err);
         setAuthError(true);
+        setDemoMode(true); // Auto-enable demo mode on auth error
         setLoading(false);
         toast({
           title: "Connection Error",
-          description: "Unable to connect to authentication service. Please continue in demo mode.",
+          description: "Unable to connect to authentication service. Demo mode enabled.",
           variant: "destructive"
         });
       }
@@ -65,9 +81,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Auth timeout - forcing loading to complete");
         setLoading(false);
         setAuthError(true);
-        window.location.href = "/?demo=true"; // Directly redirect to demo mode
+        setDemoMode(true); // Auto-enable demo mode on timeout
       }
-    }, 3000); // Reduced to 3 seconds for faster fallback
+    }, 3000); // 3 seconds timeout for faster fallback
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -92,7 +108,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [toast]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, authError, setAuthError }}>
+    <AuthContext.Provider value={{ user, loading, authError, setAuthError, demoMode }}>
       {children}
     </AuthContext.Provider>
   );

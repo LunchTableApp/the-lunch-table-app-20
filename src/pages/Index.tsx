@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { FoodForm } from "@/components/FoodForm";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -13,20 +12,13 @@ const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { user, authError } = useAuth();
+  const { user, authError, demoMode } = useAuth();
   const [showInsights, setShowInsights] = useState(false);
   const [currentFood, setCurrentFood] = useState({ name: "", insights: "" });
-  const [isDemo, setIsDemo] = useState(false);
-
-  useEffect(() => {
-    // Check if demo mode is requested
-    const params = new URLSearchParams(location.search);
-    setIsDemo(params.get('demo') === 'true' || authError);
-  }, [location, authError]);
 
   const generateInsightsMutation = useMutation({
     mutationFn: async (foodName: string) => {
-      if (isDemo) {
+      if (demoMode) {
         // Return mock insights in demo mode
         return `Here are some nutritional insights about ${foodName}:\n\n` +
                `- ${foodName} is a good source of vitamins and minerals\n` + 
@@ -55,7 +47,7 @@ const Index = () => {
       // Generate insights first
       const insights = await generateInsightsMutation.mutateAsync(newFood.name);
       
-      if (isDemo) {
+      if (demoMode) {
         // In demo mode, don't actually save to the database
         return { name: newFood.name, insights };
       }
@@ -122,7 +114,7 @@ const Index = () => {
           <h1 className="text-4xl font-bold text-primary text-center mb-4">
             LunchTable
           </h1>
-          {isDemo && (
+          {demoMode && (
             <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 w-full">
               <p className="text-sm text-yellow-700">
                 You are currently in demo mode. Your data won't be saved between sessions.

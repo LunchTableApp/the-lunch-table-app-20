@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,21 +25,9 @@ const queryClient = new QueryClient({
 });
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading, authError } = useAuth();
-  const urlParams = new URLSearchParams(window.location.search);
-  const isDemo = urlParams.get('demo') === 'true';
+  const { user, loading, authError, demoMode } = useAuth();
 
-  useEffect(() => {
-    // If loading takes more than 3 seconds, force a redirect to demo mode
-    const timeoutId = setTimeout(() => {
-      if (loading) {
-        console.log("Route protection timeout - redirecting to demo mode");
-        window.location.href = "/?demo=true";
-      }
-    }, 3000);
-    
-    return () => clearTimeout(timeoutId);
-  }, [loading]);
+  // No more timeout here - handled directly in AuthContext
 
   if (loading) {
     return (
@@ -55,28 +42,28 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
             >
               Retry Connection
             </button>
-            <a 
-              href="/?demo=true"
-              className="px-4 py-2 border border-primary text-primary rounded hover:bg-primary/10 text-center"
+            <button 
+              onClick={() => {
+                // Directly set demo mode in URL without full page refresh
+                window.history.replaceState(null, '', '/?demo=true');
+                window.location.reload(); // Just refresh once to apply demo mode
+              }}
+              className="px-4 py-2 border border-primary text-primary rounded hover:bg-primary/10"
             >
               Continue in Demo Mode
-            </a>
+            </button>
           </div>
         </div>
       </div>
     );
   }
 
-  // Always allow demo mode
-  if (isDemo) {
+  // Allow access if demo mode is enabled or user is authenticated
+  if (demoMode) {
     return <>{children}</>;
   }
 
-  // If we have an auth error but no user, redirect to demo mode
-  if (authError && !user) {
-    return <Navigate to="/?demo=true" />;
-  }
-
+  // Not in demo mode and not authenticated, redirect to auth page
   if (!user && !authError) {
     return <Navigate to="/auth" />;
   }

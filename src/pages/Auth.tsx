@@ -1,4 +1,3 @@
-
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,7 +12,7 @@ const AuthPage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, authError } = useAuth();
+  const { user, authError, demoMode } = useAuth();
   const [isOffline, setIsOffline] = useState(false);
   
   useEffect(() => {
@@ -25,14 +24,17 @@ const AuthPage = () => {
     if (user) {
       navigate('/');
     }
-  }, [user, navigate, location]);
+    
+    // If demo mode is enabled, redirect to main page
+    if (demoMode) {
+      navigate('/?demo=true');
+    }
+  }, [user, demoMode, navigate, location]);
 
   // Listen for auth state changes to handle errors and success messages
   useEffect(() => {
     const {
-      data: {
-        subscription
-      }
+      data: { subscription }
     } = supabase.auth.onAuthStateChange((event, session) => {
       switch (event) {
         case 'SIGNED_OUT':
@@ -88,12 +90,13 @@ const AuthPage = () => {
           }
       }
     });
+    
     return () => {
       subscription.unsubscribe();
     };
   }, [toast]);
 
-  if (isOffline || authError) {
+  if (authError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 text-center">
@@ -120,7 +123,10 @@ const AuthPage = () => {
               Retry Connection
             </Button>
             <Button 
-              onClick={() => navigate('/?demo=true')}
+              onClick={() => {
+                window.history.replaceState(null, '', '/?demo=true');
+                window.location.reload();
+              }}
               variant="outline"
               className="w-full"
             >
