@@ -33,6 +33,18 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-500">Loading application...</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/80"
+          >
+            Retry
+          </button>
+          <a 
+            href="/?demo=true"
+            className="mt-4 ml-2 px-4 py-2 border border-primary text-primary rounded hover:bg-primary/10 inline-block"
+          >
+            Continue in Demo Mode
+          </a>
         </div>
       </div>
     );
@@ -41,7 +53,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   // If we have an auth error but no user, redirect to a special offline version of the app
   // or to the auth page with a query parameter
   if (authError && !user) {
-    return <Navigate to="/auth?offline=true" />;
+    return <Navigate to="/?demo=true" />;
   }
 
   if (!user && !authError) {

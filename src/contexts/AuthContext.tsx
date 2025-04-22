@@ -8,9 +8,15 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   authError: boolean;
+  setAuthError: (error: boolean) => void;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, loading: true, authError: false });
+const AuthContext = createContext<AuthContextType>({ 
+  user: null, 
+  loading: true, 
+  authError: false,
+  setAuthError: () => {} 
+});
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -50,6 +56,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     getInitialSession();
 
+    // Set a timeout to stop loading if auth takes too long
+    const timeoutId = setTimeout(() => {
+      if (loading) {
+        console.log("Auth timeout - forcing loading to complete");
+        setLoading(false);
+        setAuthError(true);
+        toast({
+          title: "Connection Timeout",
+          description: "Authentication is taking too long. You can continue in demo mode.",
+          variant: "destructive"
+        });
+      }
+    }, 5000); // 5 second timeout
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
@@ -57,15 +77,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setAuthError(false);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
+      } else if (event === 'USER_UPDATED') {
+        setUser(session?.user ?? null);
       }
+      
       setLoading(false);
+      clearTimeout(timeoutId); // Clear timeout on successful auth event
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeoutId);
+    };
   }, [toast]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, authError }}>
+    <AuthContext.Provider value={{ user, loading, authError, setAuthError }}>
       {children}
     </AuthContext.Provider>
   );
