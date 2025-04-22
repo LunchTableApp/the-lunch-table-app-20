@@ -1,3 +1,4 @@
+
 import { Carrot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +36,7 @@ export const RatingSection = ({
             className={cn(
               "transition-colors rotate-180",
               carrot <= (hoveredRating || rating)
-                ? "fill-orange-400 text-orange-400"
+                ? "fill-[#FF5F3B] text-[#FF5F3B]"
                 : "text-gray-300 hover:text-orange-200"
             )}
           />
