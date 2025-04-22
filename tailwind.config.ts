@@ -18,6 +18,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -94,7 +97,12 @@ export default {
         fadeIn: "fadeIn 0.5s ease-out",
         ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
         bounce: "bounce 1s infinite",
+        "fade-in-up": "fadeInUp 0.5s ease-out",
       },
+      backgroundImage: {
+        'gradient-soft': 'linear-gradient(to right, #ee9ca7, #ffdde1)',
+        'gradient-warm': 'linear-gradient(to right, #d7d2cc 0%, #304352 100%)',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],
