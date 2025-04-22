@@ -13,6 +13,7 @@ import GoalSettings from "./pages/GoalSettings";
 import Quiz from "./pages/Quiz";
 import Chat from "./pages/Chat";
 import AuthPage from "./pages/Auth";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,20 @@ const queryClient = new QueryClient({
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, authError } = useAuth();
+  const urlParams = new URLSearchParams(window.location.search);
+  const isDemo = urlParams.get('demo') === 'true';
+
+  useEffect(() => {
+    // If loading takes more than 3 seconds, force a redirect to demo mode
+    const timeoutId = setTimeout(() => {
+      if (loading) {
+        console.log("Route protection timeout - redirecting to demo mode");
+        window.location.href = "/?demo=true";
+      }
+    }, 3000);
+    
+    return () => clearTimeout(timeoutId);
+  }, [loading]);
 
   if (loading) {
     return (
@@ -33,25 +48,31 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-500">Loading application...</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/80"
-          >
-            Retry
-          </button>
-          <a 
-            href="/?demo=true"
-            className="mt-4 ml-2 px-4 py-2 border border-primary text-primary rounded hover:bg-primary/10 inline-block"
-          >
-            Continue in Demo Mode
-          </a>
+          <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80"
+            >
+              Retry Connection
+            </button>
+            <a 
+              href="/?demo=true"
+              className="px-4 py-2 border border-primary text-primary rounded hover:bg-primary/10 text-center"
+            >
+              Continue in Demo Mode
+            </a>
+          </div>
         </div>
       </div>
     );
   }
 
-  // If we have an auth error but no user, redirect to a special offline version of the app
-  // or to the auth page with a query parameter
+  // Always allow demo mode
+  if (isDemo) {
+    return <>{children}</>;
+  }
+
+  // If we have an auth error but no user, redirect to demo mode
   if (authError && !user) {
     return <Navigate to="/?demo=true" />;
   }

@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Get initial session
     const getInitialSession = async () => {
       try {
+        console.log("Attempting to get initial auth session...");
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -35,9 +36,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setAuthError(true);
           toast({
             title: "Connection Error",
-            description: "Unable to connect to authentication service. Some features may be limited.",
+            description: "Unable to connect to authentication service. Please continue in demo mode.",
             variant: "destructive"
           });
+          setLoading(false);
+          return;
         }
         
         setUser(session?.user ?? null);
@@ -48,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
         toast({
           title: "Connection Error",
-          description: "Unable to connect to authentication service. Some features may be limited.",
+          description: "Unable to connect to authentication service. Please continue in demo mode.",
           variant: "destructive"
         });
       }
@@ -56,22 +59,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     getInitialSession();
 
-    // Set a timeout to stop loading if auth takes too long
+    // Set a shorter timeout to stop loading if auth takes too long
     const timeoutId = setTimeout(() => {
       if (loading) {
         console.log("Auth timeout - forcing loading to complete");
         setLoading(false);
         setAuthError(true);
-        toast({
-          title: "Connection Timeout",
-          description: "Authentication is taking too long. You can continue in demo mode.",
-          variant: "destructive"
-        });
+        window.location.href = "/?demo=true"; // Directly redirect to demo mode
       }
-    }, 5000); // 5 second timeout
+    }, 3000); // Reduced to 3 seconds for faster fallback
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event);
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setUser(session?.user ?? null);
         setAuthError(false);
