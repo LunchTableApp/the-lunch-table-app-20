@@ -14,16 +14,37 @@ import Quiz from "./pages/Quiz";
 import Chat from "./pages/Chat";
 import AuthPage from "./pages/Auth";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      retryDelay: 1000,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, authError } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading application...</p>
+        </div>
+      </div>
+    );
   }
 
-  if (!user) {
+  // If we have an auth error but no user, redirect to a special offline version of the app
+  // or to the auth page with a query parameter
+  if (authError && !user) {
+    return <Navigate to="/auth?offline=true" />;
+  }
+
+  if (!user && !authError) {
     return <Navigate to="/auth" />;
   }
 

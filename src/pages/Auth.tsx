@@ -1,25 +1,31 @@
+
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthError } from '@supabase/supabase-js';
+import { Button } from '@/components/ui/button';
+
 const AuthPage = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const {
-    user
-  } = useAuth();
+  const location = useLocation();
+  const { user, authError } = useAuth();
+  const [isOffline, setIsOffline] = useState(false);
+  
   useEffect(() => {
+    // Check if offline mode is requested
+    const params = new URLSearchParams(location.search);
+    setIsOffline(params.get('offline') === 'true');
+    
     // If user is already logged in, redirect to main page
     if (user) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, location]);
 
   // Listen for auth state changes to handle errors and success messages
   useEffect(() => {
@@ -86,7 +92,48 @@ const AuthPage = () => {
       subscription.unsubscribe();
     };
   }, [toast]);
-  return <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+
+  if (isOffline || authError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8 text-center">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">Welcome to LunchTable</h2>
+            <p className="mt-2 text-gray-600">
+              Unable to connect to the authentication service
+            </p>
+          </div>
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-8">
+            <div className="flex">
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">
+                  The app is currently unable to connect to the authentication service. This could be due to network issues or the service being temporarily unavailable.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col space-y-4">
+            <Button 
+              onClick={() => window.location.reload()}
+              className="w-full"
+            >
+              Retry Connection
+            </Button>
+            <Button 
+              onClick={() => navigate('/?demo=true')}
+              variant="outline"
+              className="w-full"
+            >
+              Continue in Demo Mode
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">Welcome to LunchTable</h2>
@@ -106,6 +153,8 @@ const AuthPage = () => {
         }
       }} providers={[]} theme="light" />
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default AuthPage;

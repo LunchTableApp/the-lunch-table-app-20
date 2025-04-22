@@ -1,7 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FoodForm } from "@/components/FoodForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,13 +11,29 @@ import { InsightsDialog } from "@/components/food/InsightsDialog";
 
 const Index = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, authError } = useAuth();
   const [showInsights, setShowInsights] = useState(false);
   const [currentFood, setCurrentFood] = useState({ name: "", insights: "" });
+  const [isDemo, setIsDemo] = useState(false);
+
+  useEffect(() => {
+    // Check if demo mode is requested
+    const params = new URLSearchParams(location.search);
+    setIsDemo(params.get('demo') === 'true' || authError);
+  }, [location, authError]);
 
   const generateInsightsMutation = useMutation({
     mutationFn: async (foodName: string) => {
+      if (isDemo) {
+        // Return mock insights in demo mode
+        return `Here are some nutritional insights about ${foodName}:\n\n` +
+               `- ${foodName} is a good source of vitamins and minerals\n` + 
+               `- It contains essential nutrients that support overall health\n` +
+               `- Consider pairing with vegetables for a balanced meal`;
+      }
+
       const { data, error } = await supabase.functions.invoke('generate-food-insights', {
         body: { foodName }
       });
@@ -36,10 +52,15 @@ const Index = () => {
       notes: string;
       isNewFood: boolean;
     }) => {
-      if (!user) throw new Error("User must be logged in");
-
       // Generate insights first
       const insights = await generateInsightsMutation.mutateAsync(newFood.name);
+      
+      if (isDemo) {
+        // In demo mode, don't actually save to the database
+        return { name: newFood.name, insights };
+      }
+
+      if (!user) throw new Error("User must be logged in");
 
       const { error } = await supabase
         .from('food_entries')
@@ -101,6 +122,13 @@ const Index = () => {
           <h1 className="text-4xl font-bold text-primary text-center mb-4">
             LunchTable
           </h1>
+          {isDemo && (
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 w-full">
+              <p className="text-sm text-yellow-700">
+                You are currently in demo mode. Your data won't be saved between sessions.
+              </p>
+            </div>
+          )}
           <div className="flex gap-4 mb-6">
             <Button 
               onClick={() => navigate("/logged-entries")}
