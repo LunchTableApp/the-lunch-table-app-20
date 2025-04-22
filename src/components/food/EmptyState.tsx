@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -6,13 +7,6 @@ export const EmptyState = () => {
   
   return (
     <div className="text-center py-12">
-      <div className="mb-4">
-        <img 
-          src="/eaten-carrot-logo.svg" 
-          alt="No entries" 
-          className="w-24 h-24 mx-auto opacity-50"
-        />
-      </div>
       <h3 className="text-xl font-semibold text-gray-600 mb-2">
         No food entries yet
       </h3>
