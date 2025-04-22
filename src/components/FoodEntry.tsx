@@ -63,7 +63,8 @@ export const FoodEntry = ({
   return (
     <div className={cn(
       "bg-white dark:bg-black rounded-lg shadow-md p-3 sm:p-4 mb-4 animate-fadeIn hover:shadow-lg transition-shadow border-l-4 border-l-green-400",
-      selected && "ring-2 ring-primary"
+      selected && "ring-2 ring-[#FF5F3B]", // Add outline when selected
+      "hover:border-[#FF5F3B] hover:border-2 transition-all duration-300" // Add hover effect
     )}>
       <div className="flex justify-between items-start gap-2">
         <div className="flex items-start gap-3">
@@ -116,3 +117,4 @@ export const FoodEntry = ({
     </div>
   );
 };
+
